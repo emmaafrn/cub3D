@@ -47,9 +47,14 @@ typedef		struct	s_state
 	int				line_length;
 	int				endian;
 	t_vector		player_pos;
-	t_vector		player_dir;
 	t_vector		**dir_ray;
-	t_planes		*wall_planes;
+	t_planes		*x_plane;
+	t_planes		*y_plane;
+	double			angle;
 }					t_state;
+
+t_vector	create_vector(float x, float y, float z);
+t_vector	rotate_vector_z(t_vector vector, double angle);
+void		ft_lol(int i, int j, t_state *state);
 
 #endif

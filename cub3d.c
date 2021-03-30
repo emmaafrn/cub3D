@@ -29,13 +29,29 @@ int	worldMap[mapHeight][mapWidth]=
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-// int	planes[4][4]=
-// {
-// 	{0,1,0,-1},
-// 	{0,1,0,1},
-// 	{1,0,0,-1},
-// 	{1,0,0,1}
-// };
+void	ft_planes(t_state *state)
+{
+	int	i;
+
+	i = -1;
+	state->x_plane = malloc((mapWidth + 1) * (sizeof(t_planes)));
+	state->y_plane = malloc((mapHeight + 1) * (sizeof(t_planes)));
+	while (++i < mapWidth)
+	{
+		state->x_plane[i].a = 0;
+		state->x_plane[i].b = 1;
+		state->x_plane[i].c = 0;
+		state->x_plane[i].d = i;
+	}
+	i = -1;
+	while (++i < mapWidth)
+	{
+		state->y_plane[i].a = 0;
+		state->y_plane[i].b = 1;
+		state->y_plane[i].c = 0;
+		state->y_plane[i].d = i;
+	}
+}
 
 void	ft_ray_dir(t_state *state)
 {
@@ -45,7 +61,7 @@ void	ft_ray_dir(t_state *state)
 	int		j;
 
 	j = 0;
-	r_h = (2 * atan((60 * M_PI / 180) / 2))/screenWidth;
+	r_h = (2 * tan((60 * M_PI / 180) / 2))/screenWidth;
 	r_v = (r_h * screenHeight) / screenWidth;
 	state->dir_ray = malloc(screenHeight * sizeof(t_vector *));
 	while (j < screenHeight)
@@ -63,83 +79,55 @@ void	ft_ray_dir(t_state *state)
 	}
 }
 
-// void		ft_intersections(t_state *state)
-// {
-// 	int	i;
-// 	int	j;
-// 	int	k;
-// 	double	t;
-// 	double	z;
-	
-// 	i = 0;
-// 	k = 0;
-// 	t = 0.0;
-// 	z = 0.0;
-// 	while (k < 4)
-// 	{
-// 		j = 0;
-// 		while (j < screenHeight)
-// 		{
-// 			i = 0;
-// 			while (i < screenWidth)
-// 			{
-// 				t = -((planes[k][0] * state->player_pos.x) + (planes[k][1] * state->player_pos.y)
-// 				+ (planes[k][2] * state->player_pos.z) + planes[k][3]);
-// 				t = t / ((planes[k][0] * state->dir_ray[j][i].x) + (planes[k][1] * state->dir_ray[j][i].y)
-// 				+ (planes[k][2] * state->dir_ray[j][i].z));
-// 				z = state->player_pos.z + (t * state->dir_ray[j][i].z);
-// 				if (z > 0 && z < 1)
-// 					ft_draw_wall(state, t, i, j, z);
-// 				i++;
-// 			}
-// 			j++;
-// 		}
-// 		k++;
-// 	}
-// }
-
 void	ft_intersections(t_state *state)
 {
 	int	i;
 	int	j;
-	double	t;
-	double	t2;
-	double	z;
-	double	z2;
 	
 	i = 0;
-	t = 0.0;
-	t2 = 0.0;
-	z = 0.0;
-	z2 = 0.0;
 	j = 0;
 	while (j < screenHeight)
 	{
 		i = 0;
 		while (i < screenWidth)
 		{
-			t = -((0 * state->player_pos.x) + (1 * state->player_pos.y)
-			+ (0 * state->player_pos.z) - 1);
-			t = t / ((0 * state->dir_ray[j][i].x) + (1 * state->dir_ray[j][i].y)
-			+ (0 * state->dir_ray[j][i].z));
-			z = state->player_pos.z + (t * state->dir_ray[j][i].z);
-			t2 = -((1 * state->player_pos.x) + (0 * state->player_pos.y)
-			+ (0 * state->player_pos.z) - 1);
-			t2 = t2 / ((1 * state->dir_ray[j][i].x) + (0 * state->dir_ray[j][i].y)
-			+ (0 * state->dir_ray[j][i].z));
-			z2 = state->player_pos.z + (t2 * state->dir_ray[j][i].z);
-			if (z > 0 && z < 1 && t > 0)
-				mlx_pixel_put(&state->img, state->win, i, j, 0xFFFFFF);
-			else if (z2 > 0 && z2 < 1 && t2 > 0)
-				mlx_pixel_put(&state->img, state->win, i, j, 0xFFFFFF);
-			else if (z < 0 && t > 0)
-				mlx_pixel_put(&state->img, state->win, i, j, 0x00FF00);
-			else if (z > 1 && t > 0)
-				mlx_pixel_put(&state->img, state->win, i, j, 0x0000CC);
+			state->dir_ray[j][i] = rotate_vector_z(state->dir_ray[j][i], state->angle);
+			ft_lol(i, j, state);
 			i++;
 		}
 		j++;
 	}
+}
+
+void	ft_lol(int i, int j, t_state *state)
+{
+	double	t;
+	double	t2;
+	double	z;
+	double	z2;
+
+	t = 0.0;
+	t2 = 0.0;
+	z = 0.0;
+	z2 = 0.0;
+	t = -((0 * state->player_pos.x) + (1 * state->player_pos.y)
+	+ (0 * state->player_pos.z) - 1);
+	t = t / ((0 * state->dir_ray[j][i].x) + (1 * state->dir_ray[j][i].y)
+	+ (0 * state->dir_ray[j][i].z));
+	z = state->player_pos.z + (t * state->dir_ray[j][i].z);
+	t2 = -((1 * state->player_pos.x) + (0 * state->player_pos.y)
+	+ (0 * state->player_pos.z) - 1);
+	t2 = t2 / ((1 * state->dir_ray[j][i].x) + (0 * state->dir_ray[j][i].y)
+	+ (0 * state->dir_ray[j][i].z));
+	z2 = state->player_pos.z + (t2 * state->dir_ray[j][i].z);
+	if (z > 0 && z < 1 && t > 0)
+		mlx_pixel_put(&state->img, state->win, i, j, 0xFFFFFF);
+	else if (z2 > 0 && z2 < 1 && t2 > 0)
+		mlx_pixel_put(&state->img, state->win, i, j, 0xFFFFFF);
+	else if (z < 0 && t > 0)
+		mlx_pixel_put(&state->img, state->win, i, j, 0x00FF00);
+	else if (z > 1 && t > 0)
+		mlx_pixel_put(&state->img, state->win, i, j, 0x0000CC);
 }
 
 void	ft_loop(t_state *state)
@@ -164,6 +152,8 @@ int		ft_init_game(t_state *state)
 int		key_hook(int keycode, t_state *state)
 {
 	printf("keycode = %d\n", keycode);
+	printf("posX = %f\n", state->player_pos.x);
+	printf("angle = %f\n", state->angle);
 	if (keycode == KEY_D)
 		if (state->player_pos.x > 0 && state->player_pos.x < screenWidth)
 			state->player_pos.x += 0.5;
@@ -176,7 +166,10 @@ int		key_hook(int keycode, t_state *state)
 	if (keycode == KEY_S)
 		if (state->player_pos.y > 0 && state->player_pos.y < screenHeight)
 			state->player_pos.y += 0.5;
-	printf("posX = %f\n", state->player_pos.x);
+	if (keycode == KEY_RIGHT)
+		state->angle += 0.5;
+	if (keycode == KEY_LEFT)
+		state->angle -= 0.5;
 	if (keycode == KEY_ESC)
 		exit(0);
 }
@@ -188,9 +181,6 @@ int		main()
 	state.player_pos.x = 2;
 	state.player_pos.y = 10.0;
 	state.player_pos.z = 0.5;
-	state.player_dir.x = 0;
-	state.player_dir.y = -1;
-	state.player_dir.z = 0;
 	if (!(ft_init_game(&state)))
 		return (-1);
 	mlx_loop_hook(state.mlx, ft_loop, &state);
