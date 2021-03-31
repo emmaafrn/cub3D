@@ -28,6 +28,7 @@ t_vector	rotate_vector_z(t_vector vector, double angle)
 {
 	float	new_x;
 	float	new_y;
+
 	new_x = cos(angle) * vector.x - sin(angle) * vector.y;
 	new_y = sin(angle) * vector.x + cos(angle) * vector.y;
 	return (create_vector(new_x, new_y, vector.z));

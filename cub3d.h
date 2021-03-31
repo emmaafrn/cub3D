@@ -21,21 +21,32 @@
 #define KEY_LEFT 123
 #define KEY_RIGHT 124
 #define KEY_ESC 53
+#define mapWidth 24
+#define mapHeight 8
+#define screenWidth 1024
+#define screenHeight 512
 
 typedef		struct	s_vector
 {
-	double			x;
-	double			y;
-	double			z;
+	float			x;
+	float			y;
+	float			z;
 }					t_vector;
+
+typedef		struct	s_coord
+{
+	float			x;
+	float			y;
+	float			z;
+}					t_coord;
 
 typedef		struct	s_planes
 {
 	int				a;
 	int				b;
 	int				c;
-	double			d;
-}					t_planes;
+	float			d;
+}					t_plane;
 
 typedef		struct	s_state
 {
@@ -46,15 +57,19 @@ typedef		struct	s_state
 	int				bits_per_pixel;
 	int				line_length;
 	int				endian;
-	t_vector		player_pos;
+	t_coord			player_pos;
 	t_vector		**dir_ray;
-	t_planes		*x_plane;
-	t_planes		*y_plane;
-	double			angle;
+	t_plane			*x_plane;
+	t_plane			*y_plane;
+	float			angle;
+	int				k;
+	t_plane			*plane;
 }					t_state;
 
 t_vector	create_vector(float x, float y, float z);
-t_vector	rotate_vector_z(t_vector vector, double angle);
-void		ft_lol(int i, int j, t_state *state);
+t_vector	rotate_vector_z(t_vector vector, float angle);
+float		ft_distance(t_coord *pos, t_plane *plane);
+void		ft_lol(t_vector dir, t_state *state);
+void		check_north(t_state *state, int i, int j);
 
 #endif

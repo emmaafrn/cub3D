@@ -12,11 +12,6 @@
 
 #include "cub3d.h"
 
-#define mapWidth 24
-#define mapHeight 8
-#define screenWidth 1024
-#define screenHeight 512
-
 int	worldMap[mapHeight][mapWidth]=
 {
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -34,9 +29,9 @@ void	ft_planes(t_state *state)
 	int	i;
 
 	i = -1;
-	state->x_plane = malloc((mapWidth + 1) * (sizeof(t_planes)));
-	state->y_plane = malloc((mapHeight + 1) * (sizeof(t_planes)));
-	while (++i < mapWidth)
+	state->x_plane = malloc((mapWidth + 1) * (sizeof(t_plane)));
+	state->y_plane = malloc((mapHeight + 1) * (sizeof(t_plane)));
+	while (++i < mapHeight)
 	{
 		state->x_plane[i].a = 0;
 		state->x_plane[i].b = 1;
@@ -92,42 +87,41 @@ void	ft_intersections(t_state *state)
 		while (i < screenWidth)
 		{
 			state->dir_ray[j][i] = rotate_vector_z(state->dir_ray[j][i], state->angle);
-			ft_lol(i, j, state);
+			if (state->angle >= 0 && state->angle < 90)
+				check_north(state, i, j);
+			ft_lol(state->dir_ray[j][i], state);
 			i++;
 		}
 		j++;
 	}
 }
 
-void	ft_lol(int i, int j, t_state *state)
+float		ft_distance(t_coord *pos, t_plane *plane)
+{
+	float	t;
+	float	divisor;
+
+	divisor = ((plane->a * dir.x) + (plane->b * dir.y));
+	if (divisor == 0)
+		return (0);
+	t = -((plane->a * pos->x) + (plane->b * pos->y) + plane->d);
+	t /= divisor;
+	if (t < 0)
+		return (0);
+	return (t);
+}
+
+void	ft_lol(t_vector dir, t_state *state)
 {
 	double	t;
-	double	t2;
-	double	z;
-	double	z2;
+	t_coord	inter;
 
-	t = 0.0;
-	t2 = 0.0;
-	z = 0.0;
-	z2 = 0.0;
-	t = -((0 * state->player_pos.x) + (1 * state->player_pos.y)
-	+ (0 * state->player_pos.z) - 1);
-	t = t / ((0 * state->dir_ray[j][i].x) + (1 * state->dir_ray[j][i].y)
-	+ (0 * state->dir_ray[j][i].z));
-	z = state->player_pos.z + (t * state->dir_ray[j][i].z);
-	t2 = -((1 * state->player_pos.x) + (0 * state->player_pos.y)
-	+ (0 * state->player_pos.z) - 1);
-	t2 = t2 / ((1 * state->dir_ray[j][i].x) + (0 * state->dir_ray[j][i].y)
-	+ (0 * state->dir_ray[j][i].z));
-	z2 = state->player_pos.z + (t2 * state->dir_ray[j][i].z);
-	if (z > 0 && z < 1 && t > 0)
+	t = ft_distance(state->player_pos, state->plane);
+	if (t == 0)
+		return ;
+	inter.z = state->player_pos.z + (t * dir.z);
+	if (z > 0 && z < 1 && (state->k = 1))
 		mlx_pixel_put(&state->img, state->win, i, j, 0xFFFFFF);
-	else if (z2 > 0 && z2 < 1 && t2 > 0)
-		mlx_pixel_put(&state->img, state->win, i, j, 0xFFFFFF);
-	else if (z < 0 && t > 0)
-		mlx_pixel_put(&state->img, state->win, i, j, 0x00FF00);
-	else if (z > 1 && t > 0)
-		mlx_pixel_put(&state->img, state->win, i, j, 0x0000CC);
 }
 
 void	ft_loop(t_state *state)
@@ -170,6 +164,8 @@ int		key_hook(int keycode, t_state *state)
 		state->angle += 0.5;
 	if (keycode == KEY_LEFT)
 		state->angle -= 0.5;
+	if (state->angle == 360 * (M_PI / 180))
+		state->angle = 0;
 	if (keycode == KEY_ESC)
 		exit(0);
 }
@@ -179,8 +175,9 @@ int		main()
 	t_state		state;
 
 	state.player_pos.x = 2;
-	state.player_pos.y = 10.0;
+	state.player_pos.y = 6.0;
 	state.player_pos.z = 0.5;
+	state.k = 0;
 	if (!(ft_init_game(&state)))
 		return (-1);
 	mlx_loop_hook(state.mlx, ft_loop, &state);

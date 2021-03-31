@@ -1,6 +1,6 @@
 NAME = cub3D
 
-SRC =	cub3d.c vectors.c
+SRC =	cub3d.c vectors.c check_intersections.c
 
 OBJ = ${SRC:.c=.o}
 
