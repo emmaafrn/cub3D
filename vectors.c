@@ -24,7 +24,7 @@ t_vector	multi_v(t_vector v1, t_vector v2)
 	new.z = v1.z * v2.z;
 	return (new);
 }
-t_vector	rotate_vector_z(t_vector vector, double angle)
+t_vector	rotate_vector_z(t_vector vector, float angle)
 {
 	float	new_x;
 	float	new_y;

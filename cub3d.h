@@ -45,8 +45,14 @@ typedef		struct	s_planes
 	int				a;
 	int				b;
 	int				c;
-	float			d;
+	int				d;
 }					t_plane;
+
+typedef		struct	s_inter
+{
+	double			t;
+	t_coord			inter;
+}					t_inter;
 
 typedef		struct	s_state
 {
@@ -63,13 +69,18 @@ typedef		struct	s_state
 	t_plane			*y_plane;
 	float			angle;
 	int				k;
+	int				i_plane;
 	t_plane			*plane;
+	t_inter			interr;
 }					t_state;
 
 t_vector	create_vector(float x, float y, float z);
 t_vector	rotate_vector_z(t_vector vector, float angle);
-float		ft_distance(t_coord *pos, t_plane *plane);
-void		ft_lol(t_vector dir, t_state *state);
+float		ft_distance(t_coord *pos, t_plane plane, t_vector dir);
+void		ft_lol(t_vector dir, t_state *state, int i, int j);
 void		check_north(t_state *state, int i, int j);
+void		check_south(t_state *state, int i, int j);
+void		check_east(t_state *state, int i, int j);
+void		check_west(t_state *state, int i, int j);
 
 #endif

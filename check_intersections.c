@@ -1,31 +1,61 @@
 #include "cub3d.h"
 
-int	worldMap1[mapHeight][mapWidth]=
-{
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
-
 void	check_north(t_state *state, int i, int j)
 {
-	int		x;
-	int		i;
+	int		l;
 
 	state->plane = state->x_plane;
-	i = (int)state->player_pos.y - 1;
-	x = 0;
-	while (i >= 0 && i < mapWidth)
+	l = (int)state->player_pos.y - 1;
+	while (l >= 0 && state->k == 0)
 	{
-		
-		ft_lol(i, j, state, y);
-			x++;
-
-		y--;
+		state->i_plane = l;
+		ft_lol(state->dir_ray[j][i], state, i, j);
+		l--;
 	}
+	state->k = 0;
+}
+
+void	check_south(t_state *state, int i, int j)
+{
+	int		l;
+
+	state->plane = state->x_plane;
+	l = (int)state->player_pos.y + 1;
+	while (l <= mapHeight && state->k == 0)
+	{
+		state->i_plane = l;
+		ft_lol(state->dir_ray[j][i], state, i, j);
+		l++;
+	}
+	state->k = 0;
+}
+
+void	check_east(t_state *state, int i, int j)
+{
+	int		l;
+
+	state->plane = state->y_plane;
+	l = (int)state->player_pos.x + 1;
+	while (l <= mapWidth && state->k == 0)
+	{
+		state->i_plane = l;
+		ft_lol(state->dir_ray[j][i], state, i, j);
+		l++;
+	}
+	state->k = 0;
+}
+
+void	check_west(t_state *state, int i, int j)
+{
+	int		l;
+
+	state->plane = state->y_plane;
+	l = (int)state->player_pos.x - 1;
+	while (l >= 0 && state->k == 0)
+	{
+		state->i_plane = l;
+		ft_lol(state->dir_ray[j][i], state, i, j);
+		l--;
+	}
+	state->k = 0;
 }

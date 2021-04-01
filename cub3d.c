@@ -29,8 +29,8 @@ void	ft_planes(t_state *state)
 	int	i;
 
 	i = -1;
-	state->x_plane = malloc((mapWidth + 1) * (sizeof(t_plane)));
-	state->y_plane = malloc((mapHeight + 1) * (sizeof(t_plane)));
+	state->x_plane = malloc((mapHeight + 1) * (sizeof(t_plane)));
+	state->y_plane = malloc((mapWidth + 1) * (sizeof(t_plane)));
 	while (++i < mapHeight)
 	{
 		state->x_plane[i].a = 0;
@@ -50,8 +50,8 @@ void	ft_planes(t_state *state)
 
 void	ft_ray_dir(t_state *state)
 {
-	double	r_h;
-	double	r_v;
+	float	r_h;
+	float	r_v;
 	int		i;
 	int		j;
 
@@ -88,40 +88,71 @@ void	ft_intersections(t_state *state)
 		{
 			state->dir_ray[j][i] = rotate_vector_z(state->dir_ray[j][i], state->angle);
 			if (state->angle >= 0 && state->angle < 90)
+			{
 				check_north(state, i, j);
-			ft_lol(state->dir_ray[j][i], state);
+				check_east(state, i, j);
+			}
+			if (state->angle >= 90 && state->angle < 180)
+			{
+				check_east(state, i, j);
+				check_south(state, i, j);
+			}
+			if (state->angle >= 180 && state->angle < 270)
+			{
+				check_south(state, i, j);
+				check_west(state, i, j);
+			}
+			if (state->angle >= 270 && state->angle < 360)
+			{
+				check_north(state, i, j);
+				check_west(state, i, j);
+			}
 			i++;
 		}
 		j++;
 	}
 }
 
-float		ft_distance(t_coord *pos, t_plane *plane)
+float		ft_distance(t_coord *pos, t_plane plane, t_vector dir)
 {
 	float	t;
 	float	divisor;
 
-	divisor = ((plane->a * dir.x) + (plane->b * dir.y));
+	divisor = ((plane.a * dir.x) + (plane.b * dir.y));
 	if (divisor == 0)
 		return (0);
-	t = -((plane->a * pos->x) + (plane->b * pos->y) + plane->d);
+	t = -((plane.a * pos->x) + (plane.b * pos->y) + plane.d);
 	t /= divisor;
 	if (t < 0)
 		return (0);
 	return (t);
 }
 
-void	ft_lol(t_vector dir, t_state *state)
+void	ft_lol(t_vector dir, t_state *state, int i, int j)
 {
-	double	t;
+	float	t;
 	t_coord	inter;
-
-	t = ft_distance(state->player_pos, state->plane);
+	
+	t = ft_distance(&state->player_pos, state->plane[state->i_plane], dir);
 	if (t == 0)
 		return ;
+	inter.x = state->player_pos.x + (t * dir.x);
+	inter.y = state->player_pos.y + (t * dir.y);
 	inter.z = state->player_pos.z + (t * dir.z);
-	if (z > 0 && z < 1 && (state->k = 1))
-		mlx_pixel_put(&state->img, state->win, i, j, 0xFFFFFF);
+	if (t < state->interr && inter.z > 0 && inter.z < 1)
+		if (worldMap[(int)inter.y][(int)inter.x] == 1)
+		{
+			state->interr = t;
+			state->interr.inter.x = inter.x;
+			state->interr.inter.y = inter.y;
+			state->interr.inter.z = inter.z;
+		}
+	if (inter.z > 0 && inter.z < 1)
+		if (worldMap[(int)inter.y][(int)inter.x] == 1)
+		{
+			state->k = 1;
+			mlx_pixel_put(&state->img, state->win, i, j, 0xFFFFFF);
+		}
 }
 
 void	ft_loop(t_state *state)
@@ -178,6 +209,8 @@ int		main()
 	state.player_pos.y = 6.0;
 	state.player_pos.z = 0.5;
 	state.k = 0;
+	state.interr.t = 0;
+	ft_planes(&state);
 	if (!(ft_init_game(&state)))
 		return (-1);
 	mlx_loop_hook(state.mlx, ft_loop, &state);
