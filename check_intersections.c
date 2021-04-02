@@ -5,7 +5,7 @@ void	check_north(t_state *state, int i, int j)
 	int		l;
 
 	state->plane = state->x_plane;
-	l = (int)state->player_pos.y - 1;
+	l = (int)state->player_pos.y;
 	while (l >= 0 && state->k == 0)
 	{
 		state->i_plane = l;
@@ -20,8 +20,8 @@ void	check_south(t_state *state, int i, int j)
 	int		l;
 
 	state->plane = state->x_plane;
-	l = (int)state->player_pos.y + 1;
-	while (l <= mapHeight && state->k == 0)
+	l = (int)state->player_pos.y;
+	while (l < mapHeight && state->k == 0)
 	{
 		state->i_plane = l;
 		ft_lol(state->dir_ray[j][i], state, i, j);
@@ -35,8 +35,8 @@ void	check_east(t_state *state, int i, int j)
 	int		l;
 
 	state->plane = state->y_plane;
-	l = (int)state->player_pos.x + 1;
-	while (l <= mapWidth && state->k == 0)
+	l = (int)state->player_pos.x;
+	while (l < mapWidth && state->k == 0)
 	{
 		state->i_plane = l;
 		ft_lol(state->dir_ray[j][i], state, i, j);
@@ -50,7 +50,7 @@ void	check_west(t_state *state, int i, int j)
 	int		l;
 
 	state->plane = state->y_plane;
-	l = (int)state->player_pos.x - 1;
+	l = (int)state->player_pos.x;
 	while (l >= 0 && state->k == 0)
 	{
 		state->i_plane = l;
