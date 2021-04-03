@@ -23,8 +23,8 @@
 #define KEY_ESC 53
 #define mapWidth 24
 #define mapHeight 8
-#define screenWidth 400
-#define screenHeight 400
+#define screenWidth 300
+#define screenHeight 300
 
 typedef		struct	s_vector
 {
@@ -51,9 +51,8 @@ typedef		struct	s_planes
 typedef		struct	s_inter
 {
 	double			t;
+	char			orientation;
 	t_coord			inter;
-	int				i;
-	int				j;
 }					t_inter;
 
 typedef		struct	s_state
@@ -76,16 +75,19 @@ typedef		struct	s_state
 	t_inter			interr;
 }					t_state;
 
-t_vector	create_vector(float x, float y, float z);
-t_vector	rotate_vector_z(t_vector vector, float angle);
-float		ft_distance(t_state *state, t_plane plane, t_vector dir);
-void		ft_lol(t_vector dir, t_state *state, int i, int j);
-void		check_north(t_state *state, int i, int j);
-void		check_south(t_state *state, int i, int j);
-void		check_east(t_state *state, int i, int j);
-void		check_west(t_state *state, int i, int j);
-float		ft_fmax(float a, float b);
-float		ft_fmin(float a, float b);
-t_coord		rectif_pos(t_state *state, t_plane plane, t_coord inter);
+t_vector		create_vector(float x, float y, float z);
+t_vector		rotate_vector_z(t_vector vector, float angle);
+float			ft_distance(t_state *state, t_plane plane, t_vector dir);
+float			ft_lol(t_vector dir, t_state *state, int i, int j);
+float			check_north(t_state *state, int i, int j);
+float			check_south(t_state *state, int i, int j);
+float			check_east(t_state *state, int i, int j);
+float			check_west(t_state *state, int i, int j);
+float			ft_fmax(float a, float b);
+float			ft_fmin(float a, float b);
+t_coord			rectif_pos(t_state *state, t_plane plane, t_coord inter);
+void			ft_orientation(t_state *state, int i, int j);
+unsigned int	ft_color(float t1, float t2, unsigned int color1, unsigned int color2);
+
 
 #endif

@@ -31,15 +31,12 @@ void	ft_planes(t_state *state)
 	i = -1;
 	state->x_plane = malloc(mapHeight * (sizeof(t_plane)));
 	state->y_plane = malloc(mapWidth * (sizeof(t_plane)));
-	printf("width = %d", mapWidth);
-	printf("Height = %d", mapHeight);
 	while (++i < mapHeight)
 	{
 		state->x_plane[i].a = 0;
 		state->x_plane[i].b = 1;
 		state->x_plane[i].c = 0;
 		state->x_plane[i].d = i;
-		printf("xplane = %f||%f||%f||%f\n", state->x_plane[i].a, state->x_plane[i].b, state->x_plane[i].c, state->x_plane[i].d);
 	}
 	i = -1;
 	while (++i < mapWidth)
@@ -48,7 +45,6 @@ void	ft_planes(t_state *state)
 		state->y_plane[i].b = 1;
 		state->y_plane[i].c = 0;
 		state->y_plane[i].d = i;
-		printf("yplane = %f||%f||%f||%f\n", state->y_plane[i].a, state->y_plane[i].b, state->y_plane[i].c, state->y_plane[i].d);
 	}
 }
 
@@ -78,10 +74,45 @@ void	ft_ray_dir(t_state *state)
 	}
 }
 
+unsigned int	ft_color(float t1, float t2, unsigned int color1, unsigned int color2)
+{
+	if (t1 < t2)
+		return (color1);
+	else
+		return (color2);
+}
+
+void	ft_orientation(t_state *state, int i, int j)
+{
+	float	t1;
+	float	t2;
+	int		color1;
+	int		color2;
+
+	if (state->dir_ray[j][i].y <= 0 && (color1 = 0xFF5555))
+	{
+		t1 = check_north(state, i, j);
+		if (state->dir_ray[j][i].x >= 0 && (color2 = 0xFFFF55))
+			t2 = check_east(state, i, j);
+		else if (state->dir_ray[j][i].x <= 0 && (color2 = 0xFFFFFF))
+			t2 = check_west(state, i, j);
+	}
+	else
+	{
+		t1 = check_south(state, i, j);
+		color1 = 0xFF55FF;
+		if (state->dir_ray[j][i].x >= 0 && (color2 = 0xFFFF55))
+			t2 = check_east(state, i, j);
+		else if (state->dir_ray[j][i].x <= 0 && (color2 = 0xFFFFFF))
+			t2 = check_west(state, i, j);
+	}
+	mlx_pixel_put(&state->img, state->win, i, j, ft_color(t1, t2, color1, color2));
+}
+
 void	ft_intersections(t_state *state)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	
 	i = 0;
 	j = 0;
@@ -90,36 +121,10 @@ void	ft_intersections(t_state *state)
 		i = 0;
 		while (i < screenWidth)
 		{
-			state->dir_ray[j][i] = rotate_vector_z(state->dir_ray[j][i], state->angle);
-			state->interr.t = INT_MAX;
-			// if (state->angle >= 0 && state->angle < 90)
-			// {
-			// 	check_north(state, i, j);
-			// 	check_east(state, i, j);
-			// 	mlx_pixel_put(&state->img, state->win, state->interr.i, state->interr.j, 0x000000);
-			// }
-			// if (state->angle >= 90 && state->angle < 180)
-			// {
-			// 	check_east(state, i, j);
-			// 	check_south(state, i, j);
-			// 	mlx_pixel_put(&state->img, state->win, state->interr.i, state->interr.j, 0x000000);
-			// }
-			// if (state->angle >= 180 && state->angle < 270)
-			// {
-			// 	check_south(state, i, j);
-			// 	check_west(state, i, j);
-			// 	mlx_pixel_put(&state->img, state->win, state->interr.i, state->interr.j, 0x000000);
-			// }
-			// if (state->angle >= 270 && state->angle < 360)
-			// {
-			// 	check_north(state, i, j);
-			// 	check_west(state, i, j);
-			// 	mlx_pixel_put(&state->img, state->win, state->interr.i, state->interr.j, 0x000000);
-			// }
-			check_north(state, i, j);
-			check_east(state, i, j);
-			check_south(state, i, j);
-			check_west(state, i, j);
+			state->dir_ray[j][i] = rotate_vector_z(state->dir_ray[j][i], (state->angle * (M_PI / 180)));
+			// printf("dir ray x = %f\ndir ray y = %f\n", state->dir_ray[j][i].x, state->dir_ray[j][i].y);
+			//state->interr.t = INT_MAX;
+			ft_orientation(state, i, j);
 			i++;
 		}
 		j++;
@@ -136,48 +141,46 @@ float		ft_distance(t_state *state, t_plane plane, t_vector dir)
 		return (0);
 	t = -(((plane.a * state->player_pos.x) + (plane.b * state->player_pos.y) - plane.d) / divisor);
 	if (t < 0)
-		return (0);
+		return (-1);
 	return (t);
 }
 
-void	ft_lol(t_vector dir, t_state *state, int i, int j)
+float		ft_lol(t_vector dir, t_state *state, int i, int j)
 {
 	float	t;
 	t_coord	inter;
 	
 	t = ft_distance(state, state->plane[state->i_plane], dir);
-	if (t == 0)
-		return ;
+	if (t == -1)
+		return (-1);
 	inter.x = state->player_pos.x + (t * dir.x);
 	inter.y = state->player_pos.y + (t * dir.y);
 	inter.z = state->player_pos.z + (t * dir.z);
 	inter = rectif_pos(state, state->plane[state->i_plane], inter);
-	if (t < state->interr.t && inter.z > 0 && inter.z < 1)
-		if (((int)inter.x >=0 && (int)inter.x < mapWidth) && ((int)inter.y >=0 && (int)inter.y < mapHeight) && worldMap[(int)inter.y][(int)inter.x] == 1)
-		{
-			state->k = 1;
-			state->interr.t = t;
-			state->interr.inter.x = inter.x;
-			state->interr.inter.y = inter.y;
-			state->interr.inter.z = inter.z;
-			state->interr.i = i;
-			state->interr.j = j;
-			mlx_pixel_put(&state->img, state->win, state->interr.i, state->interr.j, 0x00FF00);
-		}
-	// printf("x = %d\n y = %d\n", (int)inter.x, (int)inter.y);
-	// printf("y = %d\n", (int)inter.y);
 	if (inter.z < 0)
-		mlx_pixel_put(&state->img, state->win, state->interr.i, state->interr.j, 0xFF0000);
-	if (inter.z > 1)
-		mlx_pixel_put(&state->img, state->win, state->interr.i, state->interr.j, 0x0000FF);
-	
+		mlx_pixel_put(&state->img, state->win, i, j, 0x00FF00);
+	else if (inter.z > 1)
+		mlx_pixel_put(&state->img, state->win, i, j, 0x0000FF);
+	else if (inter.z > 0 && inter.z < 1)
+	{
+		if (((int)inter.x >= 0 && (int)inter.x < mapWidth) && ((int)inter.y >= 0
+		&& (int)inter.y < mapHeight) && worldMap[(int)inter.y][(int)inter.x] == 1)
+		{
+			// state->interr.t = t;
+			// state->interr.inter.x = inter.x;
+			// state->interr.inter.y = inter.y;
+			return (t);
+		}
+	}
+	return (-1);
 }
 
-void	ft_loop(t_state *state)
+int	ft_loop(t_state *state)
 {
 	ft_ray_dir(state);
 	ft_intersections(state);
 	mlx_clear_window(state->mlx, state->win);
+	return (0);
 }
 
 int		ft_init_game(t_state *state)
@@ -198,32 +201,35 @@ int		key_hook(int keycode, t_state *state)
 	printf("posX = %f\n", state->player_pos.x);
 	printf("angle = %f\n", state->angle);
 	if (keycode == KEY_D)
-		if (state->player_pos.x > 0 && state->player_pos.x < screenWidth)
+		if (state->player_pos.x > 0 && state->player_pos.x < mapWidth)
 			state->player_pos.x += 0.5;
 	if (keycode == KEY_A)
-		if (state->player_pos.x > 0 && state->player_pos.x < screenWidth)
+		if (state->player_pos.x > 0 && state->player_pos.x < mapWidth)
 			state->player_pos.x -= 0.5;
 	if (keycode == KEY_W)
-		if (state->player_pos.y > 0 && state->player_pos.y < screenHeight)
+		if (state->player_pos.y > 0 && state->player_pos.y < mapHeight)
 			state->player_pos.y -= 0.5;
 	if (keycode == KEY_S)
-		if (state->player_pos.y > 0 && state->player_pos.y < screenHeight)
+		if (state->player_pos.y > 0 && state->player_pos.y < mapHeight)
 			state->player_pos.y += 0.5;
 	if (keycode == KEY_RIGHT)
-		state->angle += 0.5;
+		state->angle += 5;
 	if (keycode == KEY_LEFT)
-		state->angle -= 0.5;
-	if (state->angle == 360 * (M_PI / 180))
+		state->angle -= 5;
+	if (state->angle == 360)
 		state->angle = 0;
+	if (state->angle < 0)
+		state->angle += 360;
 	if (keycode == KEY_ESC)
 		exit(0);
+	return (0);
 }
 
 int		main()
 {
 	t_state		state;
 
-	state.player_pos.x = 2;
+	state.player_pos.x = 5;
 	state.player_pos.y = 6.0;
 	state.player_pos.z = 0.5;
 	state.k = 0;
