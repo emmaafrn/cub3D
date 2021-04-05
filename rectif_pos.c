@@ -1,13 +1,14 @@
 #include "cub3d.h"
 
-float	ft_fmax(float a, float b)
+double	ft_fmax(double a, double b)
 {
 	if (a < b)
 		return (b);
 	else
 		return (a);
 }
-float	ft_fmin(float a, float b)
+
+double	ft_fmin(double a, double b)
 {
 	if (a < b)
 		return (a);

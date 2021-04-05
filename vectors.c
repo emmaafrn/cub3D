@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-t_vector	create_vector(float x, float y, float z)
+t_vector	create_vector(double x, double y, double z)
 {
 	t_vector	new;
 	new.x = x;
@@ -8,6 +8,7 @@ t_vector	create_vector(float x, float y, float z)
 	new.z = z;
 	return (new);
 }
+
 t_vector	addition_v(t_vector v1, t_vector v2)
 {
 	t_vector	new;
@@ -16,6 +17,7 @@ t_vector	addition_v(t_vector v1, t_vector v2)
 	new.z = v1.z + v2.z;
 	return (new);
 }
+
 t_vector	multi_v(t_vector v1, t_vector v2)
 {
 	t_vector	new;
@@ -24,10 +26,11 @@ t_vector	multi_v(t_vector v1, t_vector v2)
 	new.z = v1.z * v2.z;
 	return (new);
 }
-t_vector	rotate_vector_z(t_vector vector, float angle)
+
+t_vector	rotate_vector_z(t_vector vector, double angle)
 {
-	float	new_x;
-	float	new_y;
+	double	new_x;
+	double	new_y;
 
 	new_x = cos(angle) * vector.x - sin(angle) * vector.y;
 	new_y = sin(angle) * vector.x + cos(angle) * vector.y;

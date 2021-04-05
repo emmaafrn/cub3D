@@ -26,26 +26,28 @@
 #define screenWidth 300
 #define screenHeight 300
 
+extern int	worldMap[mapHeight][mapWidth];
+
 typedef		struct	s_vector
 {
-	float			x;
-	float			y;
-	float			z;
+	double			x;
+	double			y;
+	double			z;
 }					t_vector;
 
 typedef		struct	s_coord
 {
-	float			x;
-	float			y;
-	float			z;
+	double			x;
+	double			y;
+	double			z;
 }					t_coord;
 
 typedef		struct	s_planes
 {
-	float				a;
-	float				b;
-	float				c;
-	float				d;
+	double				a;
+	double				b;
+	double				c;
+	double				d;
 }					t_plane;
 
 typedef		struct	s_inter
@@ -53,6 +55,8 @@ typedef		struct	s_inter
 	double			t;
 	char			orientation;
 	t_coord			inter;
+	int				i;
+	int				j;
 }					t_inter;
 
 typedef		struct	s_state
@@ -68,26 +72,26 @@ typedef		struct	s_state
 	t_vector		**dir_ray;
 	t_plane			*x_plane;
 	t_plane			*y_plane;
-	float			angle;
+	double			angle;
 	int				k;
 	int				i_plane;
 	t_plane			*plane;
 	t_inter			interr;
 }					t_state;
 
-t_vector		create_vector(float x, float y, float z);
-t_vector		rotate_vector_z(t_vector vector, float angle);
-float			ft_distance(t_state *state, t_plane plane, t_vector dir);
-float			ft_lol(t_vector dir, t_state *state, int i, int j);
-float			check_north(t_state *state, int i, int j);
-float			check_south(t_state *state, int i, int j);
-float			check_east(t_state *state, int i, int j);
-float			check_west(t_state *state, int i, int j);
-float			ft_fmax(float a, float b);
-float			ft_fmin(float a, float b);
+t_vector		create_vector(double x, double y, double z);
+t_vector		rotate_vector_z(t_vector vector, double angle);
+double			ft_distance(t_state *state, t_plane plane, t_vector dir);
+double			ft_lol(t_vector dir, t_state *state, int i, int j);
+double			check_north(t_state *state, int i, int j);
+double			check_south(t_state *state, int i, int j);
+double			check_east(t_state *state, int i, int j);
+double			check_west(t_state *state, int i, int j);
+double			ft_fmax(double a, double b);
+double			ft_fmin(double a, double b);
 t_coord			rectif_pos(t_state *state, t_plane plane, t_coord inter);
 void			ft_orientation(t_state *state, int i, int j);
-unsigned int	ft_color(float t1, float t2, unsigned int color1, unsigned int color2);
+unsigned int	ft_color(double t1, double t2, unsigned int color1, unsigned int color2);
 
 
 #endif
