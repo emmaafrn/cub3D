@@ -53,11 +53,20 @@ typedef		struct	s_planes
 typedef		struct	s_inter
 {
 	double			t;
-	char			orientation;
-	t_coord			inter;
-	int				i;
-	int				j;
+	t_coord			coord;
 }					t_inter;
+
+typedef		struct	s_textures
+{
+	void	*img;
+	char	*data;
+	int		width;
+	int		height;
+	int		line_length;
+	int		endian;
+	int		bits_per_pixel;
+	char	*addr;
+}					t_textures;
 
 typedef		struct	s_state
 {
@@ -76,19 +85,21 @@ typedef		struct	s_state
 	int				k;
 	int				i_plane;
 	t_plane			*plane;
-	t_inter			interr;
+	t_coord			inter1_wall;
+	t_coord			inter2_wall;
 	int				W_key;
 	int				A_key;
 	int				D_key;
 	int				S_key;
 	int				left_key;
 	int				right_key;
+	t_textures		*text;
 }					t_state;
 
 t_vector		create_vector(double x, double y, double z);
 t_vector		rotate_vector_z(t_vector vector, double angle);
 double			ft_distance(t_state *state, t_plane plane, t_vector dir);
-double			ft_lol(t_vector dir, t_state *state, int i, int j);
+t_inter			ft_lol(t_vector dir, t_state *state, int i, int j);
 double			check_north(t_state *state, int i, int j);
 double			check_south(t_state *state, int i, int j);
 double			check_east(t_state *state, int i, int j);
