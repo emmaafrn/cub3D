@@ -72,6 +72,9 @@ int		checkplayerposition(char **tab, t_struct *mstruct)
 
 	i = mstruct->yplayer;
 	j = mstruct->xplayer;
+	if (j == mstruct->lenmax || j == 0)
+		return (0);
+	if (i == 0 || )
 	return (checkspaces(tab, mstruct, i, j));
 }
 

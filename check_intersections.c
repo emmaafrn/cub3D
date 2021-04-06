@@ -14,8 +14,9 @@ double	check_north(t_state *state, int i, int j)
 		t = ft_lol(state->dir_ray[j][i], state, i, j);
 		if (t >= 0)
 		{
-			if (((int)state->interr.inter.x >= 0 && (int)state->interr.inter.x < mapWidth) && ((int)state->interr.inter.y > 0
-			&& (int)state->interr.inter.y < mapHeight) && worldMap[(int)state->interr.inter.y - 1][(int)state->interr.inter.x] == 1)
+			if ((int)state->interr.inter.x >= 0 && (int)state->interr.inter.x < mapWidth
+			&& ((int)state->interr.inter.y >= 0 && (int)state->interr.inter.y < mapHeight)
+			&& worldMap[(int)state->interr.inter.y][(int)state->interr.inter.x] == 1)
 				return (t);
 			else
 				t = -1;
@@ -39,8 +40,9 @@ double	check_south(t_state *state, int i, int j)
 		t = ft_lol(state->dir_ray[j][i], state, i, j);
 		if (t >= 0)
 		{
-			if (((int)state->interr.inter.x >= 0 && (int)state->interr.inter.x < mapWidth) && ((int)state->interr.inter.y >= 0
-			&& (int)state->interr.inter.y < mapHeight) && worldMap[(int)state->interr.inter.y][(int)state->interr.inter.x] == 1)
+			if (((int)state->interr.inter.x >= 0 && (int)state->interr.inter.x < mapWidth)
+			&& ((int)state->interr.inter.y >= 0 && (int)state->interr.inter.y < mapHeight)
+			&& worldMap[(int)state->interr.inter.y][(int)state->interr.inter.x] == 1)
 				return (t);
 			else
 				t = -1;
@@ -64,8 +66,9 @@ double	check_east(t_state *state, int i, int j)
 		t = ft_lol(state->dir_ray[j][i], state, i, j);
 		if (t >= 0)
 		{
-			if (((int)state->interr.inter.x >= 0 && (int)state->interr.inter.x < mapWidth) && ((int)state->interr.inter.y >= 0
-			&& (int)state->interr.inter.y < mapHeight) && worldMap[(int)state->interr.inter.y][(int)state->interr.inter.x] == 1)
+			if (((int)state->interr.inter.x >= 0 && (int)state->interr.inter.x < mapWidth)
+			&& ((int)state->interr.inter.y >= 0 && (int)state->interr.inter.y < mapHeight)
+			&& worldMap[(int)state->interr.inter.y][(int)state->interr.inter.x] == 1)
 				return (t);
 			else
 				t = -1;
@@ -89,8 +92,9 @@ double	check_west(t_state *state, int i, int j)
 		t = ft_lol(state->dir_ray[j][i], state, i, j);
 		if (t >= 0)
 		{
-			if (((int)state->interr.inter.x > 0 && (int)state->interr.inter.x < mapWidth) && ((int)state->interr.inter.y >= 0
-			&& (int)state->interr.inter.y < mapHeight) && worldMap[(int)state->interr.inter.y][(int)state->interr.inter.x - 1] == 1)
+			if (((int)state->interr.inter.x >= 0 && (int)state->interr.inter.x < mapWidth)
+			&& ((int)state->interr.inter.y >= 0 && (int)state->interr.inter.y < mapHeight)
+			&& worldMap[(int)state->interr.inter.y][(int)state->interr.inter.x] == 1)
 				return (t);
 			else
 				t = -1;

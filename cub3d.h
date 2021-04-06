@@ -77,6 +77,12 @@ typedef		struct	s_state
 	int				i_plane;
 	t_plane			*plane;
 	t_inter			interr;
+	int				W_key;
+	int				A_key;
+	int				D_key;
+	int				S_key;
+	int				left_key;
+	int				right_key;
 }					t_state;
 
 t_vector		create_vector(double x, double y, double z);
@@ -92,6 +98,7 @@ double			ft_fmin(double a, double b);
 t_coord			rectif_pos(t_state *state, t_plane plane, t_coord inter);
 void			ft_orientation(t_state *state, int i, int j);
 unsigned int	ft_color(double t1, double t2, unsigned int color1, unsigned int color2);
+int				key_hook(int keycode, t_state *state);
 
 
 #endif

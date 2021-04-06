@@ -16,13 +16,20 @@ int	worldMap[mapHeight][mapWidth]=
 {
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
+
+void		my_mlx_pixel_put(t_state *state, int x, int y, int color)
+{
+	char	*dst;
+	dst = state->addr + (y * state->line_length + x * (state->bits_per_pixel / 8));
+	*(unsigned int*)dst = color;
+}
 
 void	ft_planes(t_state *state)
 {
@@ -120,7 +127,7 @@ void	ft_orientation(t_state *state, int i, int j)
 	// printf("t2 = %f\n", t2);
 	result = ft_color(t1, t2, color1, color2);
 	if (result != 0)
-		mlx_pixel_put(state->mlx, state->win, i, j, result);
+		my_mlx_pixel_put(state, i, j, result);
 }
 
 void	ft_intersections(t_state *state)
@@ -143,6 +150,7 @@ void	ft_intersections(t_state *state)
 		}
 		j++;
 	}
+	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);
 }
 
 double		ft_distance(t_state *state, t_plane plane, t_vector dir)
@@ -165,7 +173,6 @@ double		ft_lol(t_vector dir, t_state *state, int i, int j)
 	t_coord	inter;
 	
 	t = ft_distance(state, state->plane[state->i_plane], dir);
-	//printf("t = %f\n", t);
 	if (t == -1)
 		return (-1);
 	inter.x = state->player_pos.x + (t * dir.x);
@@ -173,9 +180,9 @@ double		ft_lol(t_vector dir, t_state *state, int i, int j)
 	inter.z = state->player_pos.z + (t * dir.z);
 	inter = rectif_pos(state, state->plane[state->i_plane], inter);
 	if (inter.z < 0)
-		mlx_pixel_put(state->mlx, state->win, i, j, 0x00FF00);
+		my_mlx_pixel_put(state, i, j, 0x00FF00);
 	else if (inter.z > 1)
-		mlx_pixel_put(state->mlx, state->win, i, j, 0x0000FF);
+		my_mlx_pixel_put(state, i, j, 0x0000FF);
 	else if (inter.z >= 0 && inter.z <= 1)
 	{
 		state->interr.inter.x = inter.x;
@@ -185,11 +192,43 @@ double		ft_lol(t_vector dir, t_state *state, int i, int j)
 	return (-1);
 }
 
-int	ft_loop(t_state *state)
+int	ft_loop(t_state *state, int keycode)
 {
+	if (state->D_key == 1)
+		if (state->player_pos.x < mapWidth)
+			{
+				state->player_pos.x += 0.5 * cos(state->angle * (M_PI / 180));
+				state->player_pos.y += 0.5 * sin(state->angle * (M_PI / 180));
+			}
+	if (state->A_key == 1)
+		if (state->player_pos.x > 0)
+		{
+			state->player_pos.x += -0.5 * cos(state->angle * (M_PI / 180));
+			state->player_pos.y += -0.5 * sin(state->angle * (M_PI / 180));
+		}
+	if (state->W_key == 1)
+		if (state->player_pos.y > 0)
+		{
+			state->player_pos.x += -0.5 * -sin(state->angle * (M_PI / 180));
+			state->player_pos.y += -0.5 * cos(state->angle * (M_PI / 180));
+		}
+	if (state->S_key == 1)
+		if (state->player_pos.y < mapHeight)
+		{
+			state->player_pos.x += 0.5 * -sin(state->angle * (M_PI / 180));
+			state->player_pos.y += 0.5 * cos(state->angle * (M_PI / 180));
+		}
+	if (state->right_key == 1)
+		state->angle += 5;
+	if (state->left_key == 1)
+		state->angle -= 5;
+	if (state->angle == 360)
+		state->angle = 0;
+	if (state->angle < 0)
+		state->angle += 360;
 	ft_ray_dir(state);
 	ft_intersections(state);
-	mlx_clear_window(state->mlx, state->win);
+	//mlx_clear_window(state->mlx, state->win);
 	return (0);
 }
 
@@ -198,7 +237,6 @@ int		ft_init_game(t_state *state)
 	state->mlx = mlx_init();
 	if (state->mlx == NULL)
 		return (0);
-	mlx_loop_hook(state->mlx, ft_loop, state);
 	state->win = mlx_new_window(state->mlx, screenWidth, screenHeight, "cub3d");
 	state->img = mlx_new_image(state->mlx, screenWidth, screenHeight);
 	state->addr = mlx_get_data_addr(state->img, &state->bits_per_pixel, &state->line_length, &state->endian);
@@ -211,37 +249,39 @@ int		key_hook(int keycode, t_state *state)
 	printf("posX = %f\n", state->player_pos.x);
 	printf("angle = %f\n", state->angle);
 	if (keycode == KEY_D)
-		if (state->player_pos.x < mapWidth)
-		{
-			state->player_pos.x += 0.5 * cos(state->angle * (M_PI / 180));
-			state->player_pos.y += 0.5 * sin(state->angle * (M_PI / 180));
-		}
+		state->D_key = 1;
 	if (keycode == KEY_A)
-		if (state->player_pos.x > 0)
-		{
-			state->player_pos.x += -0.5 * cos(state->angle * (M_PI / 180));
-			state->player_pos.y += -0.5 * sin(state->angle * (M_PI / 180));
-		}
+		state->A_key = 1;
 	if (keycode == KEY_W)
-		if (state->player_pos.y > 0)
-		{
-			state->player_pos.x += -0.5 * -sin(state->angle * (M_PI / 180));
-			state->player_pos.y += -0.5 * cos(state->angle * (M_PI / 180));
-		}
+		state->W_key = 1;
 	if (keycode == KEY_S)
-		if (state->player_pos.y < mapHeight)
-		{
-			state->player_pos.x += 0.5 * -sin(state->angle * (M_PI / 180));
-			state->player_pos.y += 0.5 * cos(state->angle * (M_PI / 180));
-		}
+		state->S_key = 1;
 	if (keycode == KEY_RIGHT)
-		state->angle += 5;
+		state->right_key = 1;
 	if (keycode == KEY_LEFT)
-		state->angle -= 5;
-	if (state->angle == 360)
-		state->angle = 0;
-	if (state->angle < 0)
-		state->angle += 360;
+		state->left_key = 1;
+	if (keycode == KEY_ESC)
+		exit(0);
+	return (0);
+}
+
+int		release_key(int keycode, t_state *state)
+{
+	printf("keycode = %d\n", keycode);
+	printf("posX = %f\n", state->player_pos.x);
+	printf("angle = %f\n", state->angle);
+	if (keycode == KEY_D)
+		state->D_key = 0;
+	if (keycode == KEY_A)
+		state->A_key = 0;
+	if (keycode == KEY_W)
+		state->W_key = 0;
+	if (keycode == KEY_S)
+		state->S_key = 0;
+	if (keycode == KEY_RIGHT)
+		state->right_key = 0;
+	if (keycode == KEY_LEFT)
+		state->left_key = 0;
 	if (keycode == KEY_ESC)
 		exit(0);
 	return (0);
@@ -259,7 +299,8 @@ int		main()
 	ft_planes(&state);
 	if (!(ft_init_game(&state)))
 		return (-1);
+	mlx_hook(state.win, 2, 0, key_hook, &state);
+	mlx_hook(state.win, 3, 0, release_key, &state);
 	mlx_loop_hook(state.mlx, ft_loop, &state);
-	mlx_key_hook(state.win, key_hook, &state);
 	mlx_loop(state.mlx);
 }
