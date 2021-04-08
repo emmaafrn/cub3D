@@ -56,6 +56,13 @@ typedef		struct	s_inter
 	t_coord			coord;
 }					t_inter;
 
+typedef		struct	s_sprite
+{
+	t_coord			coord;
+	t_plane			plane;
+	t_inter			inter;
+}					t_sprite;
+
 typedef		struct	s_textures
 {
 	void	*img;
@@ -78,6 +85,7 @@ typedef		struct	s_state
 	int				line_length;
 	int				endian;
 	t_coord			player_pos;
+	t_vector		player_dir;
 	t_vector		**dir_ray;
 	t_plane			*x_plane;
 	t_plane			*y_plane;
@@ -94,6 +102,8 @@ typedef		struct	s_state
 	int				left_key;
 	int				right_key;
 	t_textures		*text;
+	int				nb_sprites;
+	t_sprite		*sprite_tab;
 }					t_state;
 
 t_vector		create_vector(double x, double y, double z);
@@ -108,8 +118,11 @@ double			ft_fmax(double a, double b);
 double			ft_fmin(double a, double b);
 t_coord			rectif_pos(t_state *state, t_plane plane, t_coord inter);
 void			ft_orientation(t_state *state, int i, int j);
-unsigned int	ft_color(double t1, double t2, unsigned int color1, unsigned int color2);
+int				ft_texture(double t1, double t2, int text1, int text2);
 int				key_hook(int keycode, t_state *state);
-
+void			ft_mem_sprite_tab(t_state *state);
+void			ft_coord_sprites(t_state *state);
+void			ft_planes_sprites(t_state *state);
+int				ft_find_sprite(t_vector dir, t_state *state, int i, int j);
 
 #endif

@@ -17,7 +17,7 @@ int	worldMap[mapHeight][mapWidth]=
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,1,0,0,0,2,0,0,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -27,6 +27,9 @@ int	worldMap[mapHeight][mapWidth]=
 void		my_mlx_pixel_put(t_state *state, int x, int y, int color)
 {
 	char	*dst;
+
+	if ((color >> 24) == 0xFF)
+		return ;
 	dst = state->addr + (y * state->line_length + x * (state->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
@@ -88,58 +91,78 @@ void	ft_ray_dir(t_state *state)
 	}
 }
 
-unsigned int	ft_color(double t1, double t2, unsigned int color1, unsigned int color2)
+int	ft_texture(double t1, double t2, int text1, int text2)
 {
 	if (t1 == -1 && t2 == -1)
 		return (5);
 	if (t2 == -1)
-		return (color1);
+		return (text1);
 	if (t1 == -1)
-		return (color2);
+		return (text2);
 	if (t1 < t2)
-		return (color1);
+		return (text1);
 	else
-		return (color2);
+		return (text2);
 }
 
 void	ft_orientation(t_state *state, int i, int j)
 {
 	double	t1;
 	double	t2;
-	int		color1;
-	int		color2;
+	int		text1;
+	int		text2;
 	int		result;
 	double	decimal;
 	int		imgx;
 	int		imgy;
+	int		k;
 
 	t2 = -1;
-	if (state->dir_ray[j][i].y <= 0 && !(color1 = 0))
+	if (state->dir_ray[j][i].y <= 0 && !(text1 = 0))
 	{
 		t1 = check_north(state, i, j);
-		if (state->dir_ray[j][i].x >= 0 && (color2 = 1))
+		if (state->dir_ray[j][i].x >= 0 && (text2 = 1))
 			t2 = check_east(state, i, j);
-		else if (state->dir_ray[j][i].x <= 0 && (color2 = 2))
+		else if (state->dir_ray[j][i].x <= 0 && (text2 = 2))
 			t2 = check_west(state, i, j);
 	}
 	else
 	{
 		t1 = check_south(state, i, j);
-		color1 = 3;
-		if (state->dir_ray[j][i].x >= 0 && (color2 = 1))
+		text1 = 3;
+		if (state->dir_ray[j][i].x >= 0 && (text2 = 1))
 			t2 = check_east(state, i, j);
-		else if (state->dir_ray[j][i].x <= 0 && (color2 = 2))
+		else if (state->dir_ray[j][i].x <= 0 && (text2 = 2))
 			t2 = check_west(state, i, j);
 	}
-	result = ft_color(t1, t2, color1, color2);
-	if (result == color2)
+	result = ft_texture(t1, t2, text1, text2);
+	k = ft_find_sprite(state->dir_ray[j][i], state, i, j);
+	// if (k != -1)
+	// 	printf("ts = %f\n", state->sprite_tab[k].inter.t);
+	// if (t1 <= t2)
+	// 	printf("tm = %f\n", t1);
+	// if (t2 <= t1)
+	// 	printf("tm = %f\n", t2);
+	if (k != -1)
+	{
+		if ((result == text1 && state->sprite_tab[k].inter.t < t1)
+		|| (result == text2 && state->sprite_tab[k].inter.t < t2) || result == 5)
+		{
+			result = 4;
+			decimal = state->sprite_tab[k].inter.coord.x - (double)(long int)state->sprite_tab[k].inter.coord.x;
+			imgx = (state->text[result].width - 1) * decimal;
+			imgy = (state->text[result].height - 1) * state->sprite_tab[k].inter.coord.z;
+			my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
+		}
+	}
+	if (result == text2)
 	{
 		decimal = state->inter2_wall.x - (double)(long int)state->inter2_wall.x;
 		imgx = (state->text[result].width - 1) * decimal;
 		imgy = (state->text[result].height - 1) * state->inter2_wall.z;
 		my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
 	}
-	else if (result == color1)
+	else if (result == text1)
 	{
 		decimal = state->inter1_wall.x - (double)(long int)state->inter1_wall.x;
 		imgx = (state->text[result].width - 1) * decimal;
@@ -155,6 +178,7 @@ void	ft_intersections(t_state *state)
 	
 	i = 0;
 	j = 0;
+	// state->player_dir = rotate_vector_z(state->player_dir, (state->angle * (M_PI / 180)));
 	while (j < screenHeight)
 	{
 		i = 0;
@@ -241,6 +265,7 @@ int	ft_loop(t_state *state, int keycode)
 	if (state->angle < 0)
 		state->angle += 360;
 	ft_ray_dir(state);
+	ft_planes_sprites(state);
 	ft_intersections(state);
 	//mlx_clear_window(state->mlx, state->win);
 	return (0);
@@ -254,7 +279,7 @@ int		ft_init_game(t_state *state)
 	state->win = mlx_new_window(state->mlx, screenWidth, screenHeight, "cub3d");
 	state->img = mlx_new_image(state->mlx, screenWidth, screenHeight);
 	state->addr = mlx_get_data_addr(state->img, &state->bits_per_pixel, &state->line_length, &state->endian);
-	state->text = malloc (4 * sizeof(t_textures));
+	state->text = malloc (5 * sizeof(t_textures));
 	return (state->win != NULL || state->text != NULL);
 }
 
@@ -309,6 +334,9 @@ int		main()
 	state.player_pos.x = 5;
 	state.player_pos.y = 6.0;
 	state.player_pos.z = 0.5;
+	// state.player_dir.x = 0;
+	// state.player_dir.y = -1;
+	// state.player_dir.z = 0;
 	state.inter1_wall.x = -1;
 	state.inter1_wall.y = -1;
 	state.inter1_wall.z = -1;
@@ -327,6 +355,8 @@ int		main()
 	state.text[2].addr = mlx_get_data_addr(state.text[2].img, &state.text[2].bits_per_pixel, &state.text[2].line_length, &state.text[2].endian);
 	state.text[3].img =mlx_xpm_file_to_image(state.mlx, "./abstrait_psychedelic.xpm", &state.text[3].width, &state.text[3].height);
 	state.text[3].addr = mlx_get_data_addr(state.text[3].img, &state.text[3].bits_per_pixel, &state.text[3].line_length, &state.text[3].endian);
+	state.text[4].img =mlx_xpm_file_to_image(state.mlx, "./sprite.xpm", &state.text[4].width, &state.text[4].height);
+	state.text[4].addr = mlx_get_data_addr(state.text[4].img, &state.text[4].bits_per_pixel, &state.text[4].line_length, &state.text[4].endian);
 	mlx_hook(state.win, 2, 0, key_hook, &state);
 	mlx_hook(state.win, 3, 0, release_key, &state);
 	mlx_loop_hook(state.mlx, ft_loop, &state);
