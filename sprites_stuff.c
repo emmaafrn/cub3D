@@ -73,11 +73,22 @@ void	ft_planes_sprites(t_state *state)
 	}
 }
 
+// int		check_coord(t_inter inter, t_state *state, int k)
+// {
+// 	double	A;
+// 	double	B;
+// 	double	C;
+// 	double	decimal_s;
+// 	double	decimal_i;
+
+// 	decimal_s = (double)(long int)
+// }
+
 int		ft_find_sprite(t_vector dir, t_state *state, int i, int j)
 {
-	int		k;
-	double	t;
-	t_inter	inter;
+	int			k;
+	double		t;
+	t_inter		inter;
 
 	k = 0;
 	while (k < state->nb_sprites)

@@ -159,6 +159,8 @@ void	ft_orientation(t_state *state, int i, int j)
 	{
 		decimal = state->inter2_wall.x - (double)(long int)state->inter2_wall.x;
 		imgx = (state->text[result].width - 1) * decimal;
+		// if (result == 2)
+		// 	imgx = state->text[result].width - ((state->text[result].width - 1) * decimal);
 		imgy = (state->text[result].height - 1) * state->inter2_wall.z;
 		my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
 	}
@@ -166,6 +168,8 @@ void	ft_orientation(t_state *state, int i, int j)
 	{
 		decimal = state->inter1_wall.x - (double)(long int)state->inter1_wall.x;
 		imgx = (state->text[result].width - 1) * decimal;
+		// if (result == 3)
+		// 	imgx = state->text[result].width - ((state->text[result].width - 1) * decimal);
 		imgy = (state->text[result].height - 1) * state->inter1_wall.z;
 		my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
 	}
@@ -285,9 +289,9 @@ int		ft_init_game(t_state *state)
 
 int		key_hook(int keycode, t_state *state)
 {
-	printf("keycode = %d\n", keycode);
-	printf("posX = %f\n", state->player_pos.x);
-	printf("angle = %f\n", state->angle);
+// 	printf("keycode = %d\n", keycode);
+// 	printf("posX = %f\n", state->player_pos.x);
+// 	printf("angle = %f\n", state->angle);
 	if (keycode == KEY_D)
 		state->D_key = 1;
 	if (keycode == KEY_A)
@@ -307,9 +311,9 @@ int		key_hook(int keycode, t_state *state)
 
 int		release_key(int keycode, t_state *state)
 {
-	printf("keycode = %d\n", keycode);
-	printf("posX = %f\n", state->player_pos.x);
-	printf("angle = %f\n", state->angle);
+	// printf("keycode = %d\n", keycode);
+	// printf("posX = %f\n", state->player_pos.x);
+	// printf("angle = %f\n", state->angle);
 	if (keycode == KEY_D)
 		state->D_key = 0;
 	if (keycode == KEY_A)
@@ -347,13 +351,13 @@ int		main()
 	ft_planes(&state);
 	if (!(ft_init_game(&state)))
 		return (-1);
-	state.text[0].img = mlx_xpm_file_to_image(state.mlx, "./rainbow.xpm", &state.text[0].width, &state.text[0].height);
+	state.text[0].img = mlx_png_file_to_image(state.mlx, "./mossy.png", &state.text[0].width, &state.text[0].height);
 	state.text[0].addr = mlx_get_data_addr(state.text[0].img, &state.text[0].bits_per_pixel, &state.text[0].line_length, &state.text[0].endian);
-	state.text[1].img = mlx_xpm_file_to_image(state.mlx, "./vagues-psychedeliques.xpm", &state.text[1].width, &state.text[1].height);
+	state.text[1].img = mlx_png_file_to_image(state.mlx, "./greystone.png", &state.text[1].width, &state.text[1].height);
 	state.text[1].addr = mlx_get_data_addr(state.text[1].img, &state.text[1].bits_per_pixel, &state.text[1].line_length, &state.text[1].endian);
-	state.text[2].img = mlx_xpm_file_to_image(state.mlx, "./triangles.xpm", &state.text[2].width, &state.text[2].height);
+	state.text[2].img = mlx_png_file_to_image(state.mlx, "./redbrick.png", &state.text[2].width, &state.text[2].height);
 	state.text[2].addr = mlx_get_data_addr(state.text[2].img, &state.text[2].bits_per_pixel, &state.text[2].line_length, &state.text[2].endian);
-	state.text[3].img =mlx_xpm_file_to_image(state.mlx, "./abstrait_psychedelic.xpm", &state.text[3].width, &state.text[3].height);
+	state.text[3].img =mlx_png_file_to_image(state.mlx, "./purplestone.png", &state.text[3].width, &state.text[3].height);
 	state.text[3].addr = mlx_get_data_addr(state.text[3].img, &state.text[3].bits_per_pixel, &state.text[3].line_length, &state.text[3].endian);
 	state.text[4].img =mlx_xpm_file_to_image(state.mlx, "./sprite.xpm", &state.text[4].width, &state.text[4].height);
 	state.text[4].addr = mlx_get_data_addr(state.text[4].img, &state.text[4].bits_per_pixel, &state.text[4].line_length, &state.text[4].endian);
