@@ -2,13 +2,10 @@
 # define CUB3D_H
 
 # include <mlx.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <math.h>
-# include <stdlib.h>
 # include <string.h>
-# include <unistd.h>
 # include <stdarg.h>
 # include <stdio.h>
 # include <limits.h>
@@ -23,8 +20,8 @@
 #define KEY_ESC 53
 #define mapWidth 24
 #define mapHeight 8
-#define screenWidth 1000
-#define screenHeight 1000
+#define screenWidth 300
+#define screenHeight 300
 
 extern int	worldMap[mapHeight][mapWidth];
 

@@ -37,7 +37,7 @@ void		my_mlx_pixel_put(t_state *state, int x, int y, int color)
 char		*get_pixel(t_textures *text, int x, int y)
 {
 	char	*dst;
-	dst = text->addr + (y * text->line_length + x * (text->bits_per_pixel / 8));
+	dst = text->addr + ((text->height - y - 1) * text->line_length + x * (text->bits_per_pixel / 8));
 	return (dst);
 }
 
@@ -116,6 +116,8 @@ void	ft_orientation(t_state *state, int i, int j)
 	int		imgx;
 	int		imgy;
 	int		k;
+	int		color;
+	int		p = 0;
 
 	t2 = -1;
 	if (state->dir_ray[j][i].y <= 0 && !(text1 = 0))
@@ -137,39 +139,35 @@ void	ft_orientation(t_state *state, int i, int j)
 	}
 	result = ft_texture(t1, t2, text1, text2);
 	k = ft_find_sprite(state->dir_ray[j][i], state, i, j);
-	// if (k != -1)
-	// 	printf("ts = %f\n", state->sprite_tab[k].inter.t);
-	// if (t1 <= t2)
-	// 	printf("tm = %f\n", t1);
-	// if (t2 <= t1)
-	// 	printf("tm = %f\n", t2);
-	if (k != -1)
+	if (k != -1 && ((result == text1 && state->sprite_tab[k].inter.t < t1)
+	|| (result == text2 && state->sprite_tab[k].inter.t < t2) || result == 5))
 	{
-		if ((result == text1 && state->sprite_tab[k].inter.t < t1)
-		|| (result == text2 && state->sprite_tab[k].inter.t < t2) || result == 5)
+		decimal = state->sprite_tab[k].inter.coord.x - (double)(long int)state->sprite_tab[k].inter.coord.x;
+		imgx = (state->text[4].width - 1) * decimal;
+		imgy = (state->text[4].height - 1) * state->sprite_tab[k].inter.coord.z;
+		color = *(unsigned int*)get_pixel(&state->text[4], imgx, imgy);
+		// printf("color = %d\n", color);
+		if (color > 0xFF)
 		{
-			result = 4;
-			decimal = state->sprite_tab[k].inter.coord.x - (double)(long int)state->sprite_tab[k].inter.coord.x;
-			imgx = (state->text[result].width - 1) * decimal;
-			imgy = (state->text[result].height - 1) * state->sprite_tab[k].inter.coord.z;
-			my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
+			my_mlx_pixel_put(state, i, j, color);
+			p = 1;
 		}
 	}
-	if (result == text2)
+	if (p == 0 && result == text2)
 	{
-		decimal = state->inter2_wall.x - (double)(long int)state->inter2_wall.x;
+		decimal = state->inter2_wall.y - (double)(long int)state->inter2_wall.y;
+		if (result == 2)
+			decimal = 1 - decimal;
 		imgx = (state->text[result].width - 1) * decimal;
-		// if (result == 2)
-		// 	imgx = state->text[result].width - ((state->text[result].width - 1) * decimal);
 		imgy = (state->text[result].height - 1) * state->inter2_wall.z;
 		my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
 	}
-	else if (result == text1)
+	else if (p == 0 && result == text1)
 	{
 		decimal = state->inter1_wall.x - (double)(long int)state->inter1_wall.x;
+		if (result == 3)
+			decimal = 1 - decimal;
 		imgx = (state->text[result].width - 1) * decimal;
-		// if (result == 3)
-		// 	imgx = state->text[result].width - ((state->text[result].width - 1) * decimal);
 		imgy = (state->text[result].height - 1) * state->inter1_wall.z;
 		my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
 	}
@@ -335,8 +333,8 @@ int		main()
 {
 	t_state		state;
 
-	state.player_pos.x = 5;
-	state.player_pos.y = 6.0;
+	state.player_pos.x = 5.5;
+	state.player_pos.y = 6.5;
 	state.player_pos.z = 0.5;
 	// state.player_dir.x = 0;
 	// state.player_dir.y = -1;

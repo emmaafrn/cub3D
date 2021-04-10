@@ -61,14 +61,14 @@ void	ft_planes_sprites(t_state *state)
 	i = 0;
 	while (i < state->nb_sprites)
 	{
-		v.x = state->sprite_tab[i].coord.x - state->player_pos.x;
-		v.y = state->sprite_tab[i].coord.y - state->player_pos.y;
+		v.x = state->sprite_tab[i].coord.x + 0.5 - (state->player_pos.x);
+		v.y = state->sprite_tab[i].coord.y + 0.5 - (state->player_pos.y);
 		v.z = state->sprite_tab[i].coord.z - state->player_pos.z;
 		state->sprite_tab[i].plane.a = v.x;
 		state->sprite_tab[i].plane.b = v.y;
 		state->sprite_tab[i].plane.c = v.x;
-		state->sprite_tab[i].plane.d = -(v.x * state->sprite_tab[i].coord.x)
-		- (v.y * state->sprite_tab[i].coord.y) - (v.z * state->sprite_tab[i].coord.z);
+		state->sprite_tab[i].plane.d = -(v.x * (state->sprite_tab[i].coord.x + 0.5))
+		- (v.y * (state->sprite_tab[i].coord.y + 0.5)) - (v.z * state->sprite_tab[i].coord.z);
 		i++;
 	}
 }
@@ -78,10 +78,19 @@ void	ft_planes_sprites(t_state *state)
 // 	double	A;
 // 	double	B;
 // 	double	C;
-// 	double	decimal_s;
-// 	double	decimal_i;
+// 	t_coord	decimal_s;
+// 	t_coord	decimal_i;
 
-// 	decimal_s = (double)(long int)
+// 	decimal_i.z = (double)(long int)inter.coord.z;
+// 	decimal_i.x = (double)(long int)inter.coord.x;
+// 	decimal_s.x = 0.5;
+// 	decimal_s.z = 0.5;
+// 	A = ft_fmax(decimal_i.x, decimal_s.x) - ft_fmin(decimal_i.x, decimal_s.x);
+// 	B = ft_fmax(decimal_i.z, decimal_s.z) - ft_fmin(decimal_i.z, decimal_s.z);
+// 	C = sqrt(pow(A, 2) + pow(B, 2));
+// 	if (C <= 0.5)
+// 		return (1);
+// 	return (0);
 // }
 
 int		ft_find_sprite(t_vector dir, t_state *state, int i, int j)
@@ -98,7 +107,7 @@ int		ft_find_sprite(t_vector dir, t_state *state, int i, int j)
 		inter.coord.y = state->player_pos.y + (t * dir.y);
 		inter.coord.z = state->player_pos.z + (t * dir.z);
 		inter.coord = rectif_pos(state, state->sprite_tab[k].plane, inter.coord);
-		if (t >= 0 && inter.coord.z >= 0 && inter.coord.z <= 1)
+		if (t > 0 && inter.coord.z >= 0 && inter.coord.z <= 1)
 			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
 			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight)
 			&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 2)
