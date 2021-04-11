@@ -67,33 +67,34 @@ void	ft_planes_sprites(t_state *state)
 		state->sprite_tab[i].plane.a = v.x;
 		state->sprite_tab[i].plane.b = v.y;
 		state->sprite_tab[i].plane.c = v.x;
-		state->sprite_tab[i].plane.d = -(v.x * (state->sprite_tab[i].coord.x + 0.5))
-		- (v.y * (state->sprite_tab[i].coord.y + 0.5)) - (v.z * state->sprite_tab[i].coord.z);
+		state->sprite_tab[i].plane.d = -(v.x * (state->sprite_tab[i].coord.x \
+		+ 0.5)) - (v.y * (state->sprite_tab[i].coord.y + 0.5)) \
+		- (v.z * state->sprite_tab[i].coord.z);
 		i++;
 	}
 }
 
-// int		check_coord(t_inter inter, t_state *state, int k)
-// {
-// 	double	A;
-// 	double	B;
-// 	double	C;
-// 	t_coord	decimal_s;
-// 	t_coord	decimal_i;
+int	check_coord(t_inter inter, t_state *state, int k)
+{
+	double	A;
+	double	B;
+	double	C;
+	t_coord	decimal_s;
+	t_coord	decimal_i;
 
-// 	decimal_i.z = (double)(long int)inter.coord.z;
-// 	decimal_i.x = (double)(long int)inter.coord.x;
-// 	decimal_s.x = 0.5;
-// 	decimal_s.z = 0.5;
-// 	A = ft_fmax(decimal_i.x, decimal_s.x) - ft_fmin(decimal_i.x, decimal_s.x);
-// 	B = ft_fmax(decimal_i.z, decimal_s.z) - ft_fmin(decimal_i.z, decimal_s.z);
-// 	C = sqrt(pow(A, 2) + pow(B, 2));
-// 	if (C <= 0.5)
-// 		return (1);
-// 	return (0);
-// }
+	decimal_i.z = inter.coord.z - (int)inter.coord.z;
+	decimal_i.x = inter.coord.x - (int)inter.coord.x;
+	decimal_s.x = 0.5;
+	decimal_s.z = 0.5;
+	A = ft_fmax(decimal_i.x, decimal_s.x) - ft_fmin(decimal_i.x, decimal_s.x);
+	B = ft_fmax(decimal_i.z, decimal_s.z) - ft_fmin(decimal_i.z, decimal_s.z);
+	C = sqrt(pow(A, 2) + pow(B, 2));
+	if (C <= 0.5)
+		return (1);
+	return (0);
+}
 
-int		ft_find_sprite(t_vector dir, t_state *state, int i, int j)
+int	ft_find_sprite(t_vector dir, t_state *state, int i, int j)
 {
 	int			k;
 	double		t;
@@ -106,10 +107,12 @@ int		ft_find_sprite(t_vector dir, t_state *state, int i, int j)
 		inter.coord.x = state->player_pos.x + (t * dir.x);
 		inter.coord.y = state->player_pos.y + (t * dir.y);
 		inter.coord.z = state->player_pos.z + (t * dir.z);
-		inter.coord = rectif_pos(state, state->sprite_tab[k].plane, inter.coord);
+		inter.coord =\
+		rectif_pos(state, state->sprite_tab[k].plane, inter.coord);
 		if (t > 0 && inter.coord.z >= 0 && inter.coord.z <= 1)
-			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
-			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight)
+		{
+			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth \
+			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight) \
 			&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 2)
 			{
 				state->sprite_tab[k].inter.coord.x = inter.coord.x;
@@ -118,6 +121,7 @@ int		ft_find_sprite(t_vector dir, t_state *state, int i, int j)
 				state->sprite_tab[k].inter.t = t;
 				return (k);
 			}
+		}
 		k++;
 	}
 	return (-1);

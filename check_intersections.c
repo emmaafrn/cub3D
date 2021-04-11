@@ -11,7 +11,7 @@ double	check_north(t_state *state, int i, int j)
 	while (l >= 0 && inter.t < 0)
 	{
 		state->i_plane = l;
-		inter = ft_lol(state->dir_ray[j][i], state, i, j);
+		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
 		if (inter.t >= 0)
 		{
 			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
@@ -42,7 +42,7 @@ double	check_south(t_state *state, int i, int j)
 	while (l < mapHeight && inter.t < 0)
 	{
 		state->i_plane = l;
-		inter = ft_lol(state->dir_ray[j][i], state, i, j);
+		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
 		if (inter.t >= 0)
 		{
 			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
@@ -73,7 +73,7 @@ double	check_east(t_state *state, int i, int j)
 	while (l < mapWidth && inter.t < 0)
 	{
 		state->i_plane = l;
-		inter = ft_lol(state->dir_ray[j][i], state, i, j);
+		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
 		if (inter.t >= 0)
 		{
 			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
@@ -104,7 +104,7 @@ double	check_west(t_state *state, int i, int j)
 	while (l >= 0 && inter.t < 0)
 	{
 		state->i_plane = l;
-		inter = ft_lol(state->dir_ray[j][i], state, i, j);
+		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
 		if (inter.t >= 0)
 		{
 			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth

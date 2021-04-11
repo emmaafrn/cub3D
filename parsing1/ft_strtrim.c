@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmoulin <bmoulin@42lyon.fr>                +#+  +:+       +#+        */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 17:01:11 by efarin            #+#    #+#             */
-/*   Updated: 2021/04/10 17:02:46 by bmoulin          ###   ########lyon.fr   */
+/*   Updated: 2020/12/07 17:57:29 by efarin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "cub3d.h"
 
 static size_t	ft_check(char c, char const *set)
 {
-	size_t	i;
+	size_t i;
 
 	i = 0;
 	while (set[i])
@@ -26,14 +26,14 @@ static size_t	ft_check(char c, char const *set)
 	return (0);
 }
 
-static char	*ft_putzero(char *str, size_t i)
+static char		*ft_putzero(char *str, size_t i)
 {
 	str = malloc(1 * sizeof(char));
 	str[i] = '\0';
 	return (str);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+char			*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	i;
 	size_t	l;
@@ -47,14 +47,14 @@ char	*ft_strtrim(char const *s1, char const *set)
 	i = 0;
 	j = 0;
 	l = ft_strlen(s1) - 1;
+	str = NULL;
 	while (ft_check(s1[j], set) == 1 && s1[j])
 		j++;
 	while (ft_check(s1[l], set) == 1 && l > 0)
 		l--;
 	if (j == ft_strlen(s1))
 		return (ft_putzero(str, i));
-	str = malloc((l - j + 2) * sizeof(char));
-	if (str == NULL)
+	if ((str = malloc((l - j + 2) * sizeof(char))) == NULL)
 		return (NULL);
 	while (j != (l + 1))
 		str[i++] = s1[j++];

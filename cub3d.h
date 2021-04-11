@@ -1,6 +1,7 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include "parsing/parsing.h"
 # include <mlx.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -72,8 +73,15 @@ typedef		struct	s_textures
 	char	*addr;
 }					t_textures;
 
+typedef		struct	s_wall_text
+{
+	double			t;
+	int				result;
+}					t_wall_text;
+
 typedef		struct	s_state
 {
+	t_struct		map;
 	void			*mlx;
 	void			*win;
 	void			*img;
@@ -82,7 +90,6 @@ typedef		struct	s_state
 	int				line_length;
 	int				endian;
 	t_coord			player_pos;
-	t_vector		player_dir;
 	t_vector		**dir_ray;
 	t_plane			*x_plane;
 	t_plane			*y_plane;
@@ -92,6 +99,7 @@ typedef		struct	s_state
 	t_plane			*plane;
 	t_coord			inter1_wall;
 	t_coord			inter2_wall;
+	t_wall_text		wall_text;
 	int				W_key;
 	int				A_key;
 	int				D_key;
@@ -103,10 +111,16 @@ typedef		struct	s_state
 	t_sprite		*sprite_tab;
 }					t_state;
 
+void			my_mlx_pixel_put(t_state *state, int x, int y, int color);
+char			*get_pixel(t_textures *text, int x, int y);
+void			ft_planes(t_state *state);
+void			ft_ray_dir(t_state *state);
+int				ft_loop(t_state *state);
+int				ft_init_game(t_state *state);
 t_vector		create_vector(double x, double y, double z);
 t_vector		rotate_vector_z(t_vector vector, double angle);
 double			ft_distance(t_state *state, t_plane plane, t_vector dir);
-t_inter			ft_lol(t_vector dir, t_state *state, int i, int j);
+t_inter			ft_get_coord(t_vector dir, t_state *state, int i, int j);
 double			check_north(t_state *state, int i, int j);
 double			check_south(t_state *state, int i, int j);
 double			check_east(t_state *state, int i, int j);
@@ -115,11 +129,17 @@ double			ft_fmax(double a, double b);
 double			ft_fmin(double a, double b);
 t_coord			rectif_pos(t_state *state, t_plane plane, t_coord inter);
 void			ft_orientation(t_state *state, int i, int j);
-int				ft_texture(double t1, double t2, int text1, int text2);
+void			ft_intersections(t_state *state);
 int				key_hook(int keycode, t_state *state);
+void			d_or_a_key(t_state *state);
+void			w_or_s_key(t_state *state);
+int				release_key(int keycode, t_state *state);
 void			ft_mem_sprite_tab(t_state *state);
 void			ft_coord_sprites(t_state *state);
 void			ft_planes_sprites(t_state *state);
 int				ft_find_sprite(t_vector dir, t_state *state, int i, int j);
+t_wall_text		ft_texture(double t1, double t2, int text1, int text2);
+t_wall_text		ft_find_texture(t_state *state, int i, int j);
+void			mlx_get_texture(t_state *state);
 
 #endif

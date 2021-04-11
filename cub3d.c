@@ -34,12 +34,6 @@ void		my_mlx_pixel_put(t_state *state, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-char		*get_pixel(t_textures *text, int x, int y)
-{
-	char	*dst;
-	dst = text->addr + ((text->height - y - 1) * text->line_length + x * (text->bits_per_pixel / 8));
-	return (dst);
-}
 
 void	ft_planes(t_state *state)
 {
@@ -91,69 +85,33 @@ void	ft_ray_dir(t_state *state)
 	}
 }
 
-int	ft_texture(double t1, double t2, int text1, int text2)
-{
-	if (t1 == -1 && t2 == -1)
-		return (5);
-	if (t2 == -1)
-		return (text1);
-	if (t1 == -1)
-		return (text2);
-	if (t1 < t2)
-		return (text1);
-	else
-		return (text2);
-}
-
 void	ft_orientation(t_state *state, int i, int j)
 {
-	double	t1;
-	double	t2;
-	int		text1;
-	int		text2;
 	int		result;
 	double	decimal;
 	int		imgx;
 	int		imgy;
-	int		k;
+	int		sprite_num;
 	int		color;
 	int		p = 0;
 
-	t2 = -1;
-	if (state->dir_ray[j][i].y <= 0 && !(text1 = 0))
+	state->wall_text = ft_find_texture(state, i, j);
+	result = state->wall_text.result;
+	sprite_num = ft_find_sprite(state->dir_ray[j][i], state, i, j);
+	if (sprite_num != -1 && (state->sprite_tab[sprite_num].inter.t < state->wall_text.t || result == 5))
 	{
-		t1 = check_north(state, i, j);
-		if (state->dir_ray[j][i].x >= 0 && (text2 = 1))
-			t2 = check_east(state, i, j);
-		else if (state->dir_ray[j][i].x <= 0 && (text2 = 2))
-			t2 = check_west(state, i, j);
-	}
-	else
-	{
-		t1 = check_south(state, i, j);
-		text1 = 3;
-		if (state->dir_ray[j][i].x >= 0 && (text2 = 1))
-			t2 = check_east(state, i, j);
-		else if (state->dir_ray[j][i].x <= 0 && (text2 = 2))
-			t2 = check_west(state, i, j);
-	}
-	result = ft_texture(t1, t2, text1, text2);
-	k = ft_find_sprite(state->dir_ray[j][i], state, i, j);
-	if (k != -1 && ((result == text1 && state->sprite_tab[k].inter.t < t1)
-	|| (result == text2 && state->sprite_tab[k].inter.t < t2) || result == 5))
-	{
-		decimal = state->sprite_tab[k].inter.coord.x - (double)(long int)state->sprite_tab[k].inter.coord.x;
+		decimal = state->sprite_tab[sprite_num].inter.coord.x
+		- (double)(long int)state->sprite_tab[sprite_num].inter.coord.x;
 		imgx = (state->text[4].width - 1) * decimal;
-		imgy = (state->text[4].height - 1) * state->sprite_tab[k].inter.coord.z;
+		imgy = (state->text[4].height - 1) * state->sprite_tab[sprite_num].inter.coord.z;
 		color = *(unsigned int*)get_pixel(&state->text[4], imgx, imgy);
-		// printf("color = %d\n", color);
 		if (color > 0xFF)
 		{
 			my_mlx_pixel_put(state, i, j, color);
 			p = 1;
 		}
 	}
-	if (p == 0 && result == text2)
+	if (p == 0 && (result == 1 || result == 2))
 	{
 		decimal = state->inter2_wall.y - (double)(long int)state->inter2_wall.y;
 		if (result == 2)
@@ -162,7 +120,7 @@ void	ft_orientation(t_state *state, int i, int j)
 		imgy = (state->text[result].height - 1) * state->inter2_wall.z;
 		my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
 	}
-	else if (p == 0 && result == text1)
+	else if (p == 0 && (result == 0 || result == 3))
 	{
 		decimal = state->inter1_wall.x - (double)(long int)state->inter1_wall.x;
 		if (result == 3)
@@ -180,7 +138,6 @@ void	ft_intersections(t_state *state)
 	
 	i = 0;
 	j = 0;
-	// state->player_dir = rotate_vector_z(state->player_dir, (state->angle * (M_PI / 180)));
 	while (j < screenHeight)
 	{
 		i = 0;
@@ -209,7 +166,7 @@ double		ft_distance(t_state *state, t_plane plane, t_vector dir)
 	return (t);
 }
 
-t_inter		ft_lol(t_vector dir, t_state *state, int i, int j)
+t_inter		ft_get_coord(t_vector dir, t_state *state, int i, int j)
 {
 	double	t;
 	t_inter	inter;
@@ -232,47 +189,6 @@ t_inter		ft_lol(t_vector dir, t_state *state, int i, int j)
 	return (inter);
 }
 
-int	ft_loop(t_state *state, int keycode)
-{
-	if (state->D_key == 1)
-		if (state->player_pos.x < mapWidth)
-			{
-				state->player_pos.x += 0.5 * cos(state->angle * (M_PI / 180));
-				state->player_pos.y += 0.5 * sin(state->angle * (M_PI / 180));
-			}
-	if (state->A_key == 1)
-		if (state->player_pos.x > 0)
-		{
-			state->player_pos.x += -0.5 * cos(state->angle * (M_PI / 180));
-			state->player_pos.y += -0.5 * sin(state->angle * (M_PI / 180));
-		}
-	if (state->W_key == 1)
-		if (state->player_pos.y > 0)
-		{
-			state->player_pos.x += -0.5 * -sin(state->angle * (M_PI / 180));
-			state->player_pos.y += -0.5 * cos(state->angle * (M_PI / 180));
-		}
-	if (state->S_key == 1)
-		if (state->player_pos.y < mapHeight)
-		{
-			state->player_pos.x += 0.5 * -sin(state->angle * (M_PI / 180));
-			state->player_pos.y += 0.5 * cos(state->angle * (M_PI / 180));
-		}
-	if (state->right_key == 1)
-		state->angle += 5;
-	if (state->left_key == 1)
-		state->angle -= 5;
-	if (state->angle == 360)
-		state->angle = 0;
-	if (state->angle < 0)
-		state->angle += 360;
-	ft_ray_dir(state);
-	ft_planes_sprites(state);
-	ft_intersections(state);
-	//mlx_clear_window(state->mlx, state->win);
-	return (0);
-}
-
 int		ft_init_game(t_state *state)
 {
 	state->mlx = mlx_init();
@@ -285,50 +201,6 @@ int		ft_init_game(t_state *state)
 	return (state->win != NULL || state->text != NULL);
 }
 
-int		key_hook(int keycode, t_state *state)
-{
-// 	printf("keycode = %d\n", keycode);
-// 	printf("posX = %f\n", state->player_pos.x);
-// 	printf("angle = %f\n", state->angle);
-	if (keycode == KEY_D)
-		state->D_key = 1;
-	if (keycode == KEY_A)
-		state->A_key = 1;
-	if (keycode == KEY_W)
-		state->W_key = 1;
-	if (keycode == KEY_S)
-		state->S_key = 1;
-	if (keycode == KEY_RIGHT)
-		state->right_key = 1;
-	if (keycode == KEY_LEFT)
-		state->left_key = 1;
-	if (keycode == KEY_ESC)
-		exit(0);
-	return (0);
-}
-
-int		release_key(int keycode, t_state *state)
-{
-	// printf("keycode = %d\n", keycode);
-	// printf("posX = %f\n", state->player_pos.x);
-	// printf("angle = %f\n", state->angle);
-	if (keycode == KEY_D)
-		state->D_key = 0;
-	if (keycode == KEY_A)
-		state->A_key = 0;
-	if (keycode == KEY_W)
-		state->W_key = 0;
-	if (keycode == KEY_S)
-		state->S_key = 0;
-	if (keycode == KEY_RIGHT)
-		state->right_key = 0;
-	if (keycode == KEY_LEFT)
-		state->left_key = 0;
-	if (keycode == KEY_ESC)
-		exit(0);
-	return (0);
-}
-
 int		main()
 {
 	t_state		state;
@@ -336,9 +208,6 @@ int		main()
 	state.player_pos.x = 5.5;
 	state.player_pos.y = 6.5;
 	state.player_pos.z = 0.5;
-	// state.player_dir.x = 0;
-	// state.player_dir.y = -1;
-	// state.player_dir.z = 0;
 	state.inter1_wall.x = -1;
 	state.inter1_wall.y = -1;
 	state.inter1_wall.z = -1;
@@ -349,16 +218,7 @@ int		main()
 	ft_planes(&state);
 	if (!(ft_init_game(&state)))
 		return (-1);
-	state.text[0].img = mlx_png_file_to_image(state.mlx, "./mossy.png", &state.text[0].width, &state.text[0].height);
-	state.text[0].addr = mlx_get_data_addr(state.text[0].img, &state.text[0].bits_per_pixel, &state.text[0].line_length, &state.text[0].endian);
-	state.text[1].img = mlx_png_file_to_image(state.mlx, "./greystone.png", &state.text[1].width, &state.text[1].height);
-	state.text[1].addr = mlx_get_data_addr(state.text[1].img, &state.text[1].bits_per_pixel, &state.text[1].line_length, &state.text[1].endian);
-	state.text[2].img = mlx_png_file_to_image(state.mlx, "./redbrick.png", &state.text[2].width, &state.text[2].height);
-	state.text[2].addr = mlx_get_data_addr(state.text[2].img, &state.text[2].bits_per_pixel, &state.text[2].line_length, &state.text[2].endian);
-	state.text[3].img =mlx_png_file_to_image(state.mlx, "./purplestone.png", &state.text[3].width, &state.text[3].height);
-	state.text[3].addr = mlx_get_data_addr(state.text[3].img, &state.text[3].bits_per_pixel, &state.text[3].line_length, &state.text[3].endian);
-	state.text[4].img =mlx_xpm_file_to_image(state.mlx, "./sprite.xpm", &state.text[4].width, &state.text[4].height);
-	state.text[4].addr = mlx_get_data_addr(state.text[4].img, &state.text[4].bits_per_pixel, &state.text[4].line_length, &state.text[4].endian);
+	mlx_get_texture(&state);
 	mlx_hook(state.win, 2, 0, key_hook, &state);
 	mlx_hook(state.win, 3, 0, release_key, &state);
 	mlx_loop_hook(state.mlx, ft_loop, &state);
