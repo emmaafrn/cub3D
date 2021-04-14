@@ -16,9 +16,9 @@ int	worldMap[mapHeight][mapWidth]=
 {
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,0,0,2,0,0,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,1,0,0,0,2,0,2,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
@@ -28,8 +28,6 @@ void		my_mlx_pixel_put(t_state *state, int x, int y, int color)
 {
 	char	*dst;
 
-	if ((color >> 24) == 0xFF)
-		return ;
 	dst = state->addr + (y * state->line_length + x * (state->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
@@ -88,6 +86,7 @@ void	ft_ray_dir(t_state *state)
 void	ft_orientation(t_state *state, int i, int j)
 {
 	int		result;
+	double	ratioSx;
 	double	decimal;
 	int		imgx;
 	int		imgy;
@@ -97,18 +96,24 @@ void	ft_orientation(t_state *state, int i, int j)
 
 	state->wall_text = ft_find_texture(state, i, j);
 	result = state->wall_text.result;
-	sprite_num = ft_find_sprite(state->dir_ray[j][i], state, i, j);
-	if (sprite_num != -1 && (state->sprite_tab[sprite_num].inter.t < state->wall_text.t || result == 5))
+	sprite_num = -1;
+	while (sprite_num != -2 && sprite_num < state->nb_sprites && p == 0)
 	{
-		decimal = state->sprite_tab[sprite_num].inter.coord.x
-		- (double)(long int)state->sprite_tab[sprite_num].inter.coord.x;
-		imgx = (state->text[4].width - 1) * decimal;
-		imgy = (state->text[4].height - 1) * state->sprite_tab[sprite_num].inter.coord.z;
-		color = *(unsigned int*)get_pixel(&state->text[4], imgx, imgy);
-		if (color > 0xFF)
+		sprite_num = ft_find_sprite(state->dir_ray[j][i], state, i, j, sprite_num + 1);
+		if (sprite_num != -2 && (result == 5 || state->sprite_tab[sprite_num].inter.t < state->wall_text.t))
 		{
-			my_mlx_pixel_put(state, i, j, color);
-			p = 1;
+			ratioSx = 1 - get_sprite_text(state, state->sprite_tab[sprite_num].inter.coord, sprite_num);
+			imgx = (state->text[4].width - 1) * ratioSx;
+			imgy = (state->text[4].height - 1) * state->sprite_tab[sprite_num].inter.coord.z;
+			if (ratioSx >= 0 && ratioSx < 1)
+			{
+				color = *(unsigned int*)get_pixel(&state->text[4], imgx, imgy);
+				if (color > 0xFF)
+				{
+					my_mlx_pixel_put(state, i, j, color);
+					p = 1;
+				}
+			}
 		}
 	}
 	if (p == 0 && (result == 1 || result == 2))

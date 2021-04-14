@@ -1,6 +1,6 @@
 NAME = cub3D
 
-SRC =	cub3d.c vectors.c check_intersections.c rectif_pos.c sprites_stuff.c hook_stuff.c textures_stuff.c
+SRC =	cub3d.c vectors.c check_intersections.c rectif_pos.c sprites_stuff.c hook_stuff.c textures_stuff.c text_sprite.c
 
 OBJ = ${SRC:.c=.o}
 
