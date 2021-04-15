@@ -15,9 +15,9 @@
 int	worldMap[mapHeight][mapWidth]=
 {
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,0,0,2,0,2,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,1},
+	{1,1,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,2,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -31,7 +31,6 @@ void		my_mlx_pixel_put(t_state *state, int x, int y, int color)
 	dst = state->addr + (y * state->line_length + x * (state->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
-
 
 void	ft_planes(t_state *state)
 {
@@ -92,31 +91,39 @@ void	ft_orientation(t_state *state, int i, int j)
 	int		imgy;
 	int		sprite_num;
 	int		color;
-	int		p = 0;
+	int		printed = 0;
 
 	state->wall_text = ft_find_texture(state, i, j);
 	result = state->wall_text.result;
 	sprite_num = -1;
-	while (sprite_num != -2 && sprite_num < state->nb_sprites && p == 0)
+	printed = 0;
+	color = 0xFF;
+	while (sprite_num != -2 && sprite_num < state->nb_sprites)
 	{
-		sprite_num = ft_find_sprite(state->dir_ray[j][i], state, i, j, sprite_num + 1);
+		// printf("AAAAA\n");
+		sprite_num = ft_find_sprite(state->dir_ray[j][i], state, sprite_num + 1);
 		if (sprite_num != -2 && (result == 5 || state->sprite_tab[sprite_num].inter.t < state->wall_text.t))
 		{
+			// printf("BBBBBB\n");
 			ratioSx = 1 - get_sprite_text(state, state->sprite_tab[sprite_num].inter.coord, sprite_num);
 			imgx = (state->text[4].width - 1) * ratioSx;
 			imgy = (state->text[4].height - 1) * state->sprite_tab[sprite_num].inter.coord.z;
 			if (ratioSx >= 0 && ratioSx < 1)
 			{
+				// printf("CCCCCC\n");
 				color = *(unsigned int*)get_pixel(&state->text[4], imgx, imgy);
 				if (color > 0xFF)
 				{
+					// printf("DDDDDDD\n");
 					my_mlx_pixel_put(state, i, j, color);
-					p = 1;
+					// if (i == screenWidth / 2 && j == screenHeight / 2)
+					// 	printf("I AM HERE !!! %d\n", color);
+					printed = 1;
 				}
 			}
 		}
 	}
-	if (p == 0 && (result == 1 || result == 2))
+	if (printed == 0 && (result == 1 || result == 2))
 	{
 		decimal = state->inter2_wall.y - (double)(long int)state->inter2_wall.y;
 		if (result == 2)
@@ -125,7 +132,7 @@ void	ft_orientation(t_state *state, int i, int j)
 		imgy = (state->text[result].height - 1) * state->inter2_wall.z;
 		my_mlx_pixel_put(state, i, j, *(unsigned int*)get_pixel(&state->text[result], imgx, imgy));
 	}
-	else if (p == 0 && (result == 0 || result == 3))
+	else if (printed == 0 && (result == 0 || result == 3))
 	{
 		decimal = state->inter1_wall.x - (double)(long int)state->inter1_wall.x;
 		if (result == 3)
@@ -196,6 +203,16 @@ t_inter		ft_get_coord(t_vector dir, t_state *state, int i, int j)
 
 int		ft_init_game(t_state *state)
 {
+	state->player_pos.x = 5.5;
+	state->player_pos.y = 6.5;
+	state->player_pos.z = 0.5;
+	state->inter1_wall.x = -1;
+	state->inter1_wall.y = -1;
+	state->inter1_wall.z = -1;
+	state->inter2_wall.x = -1;
+	state->inter2_wall.y = -1;
+	state->inter2_wall.z = -1;
+	state->k = 0;
 	state->mlx = mlx_init();
 	if (state->mlx == NULL)
 		return (0);
@@ -209,17 +226,7 @@ int		ft_init_game(t_state *state)
 int		main()
 {
 	t_state		state;
-
-	state.player_pos.x = 5.5;
-	state.player_pos.y = 6.5;
-	state.player_pos.z = 0.5;
-	state.inter1_wall.x = -1;
-	state.inter1_wall.y = -1;
-	state.inter1_wall.z = -1;
-	state.inter2_wall.x = -1;
-	state.inter2_wall.y = -1;
-	state.inter2_wall.z = -1;
-	state.k = 0;
+	
 	ft_planes(&state);
 	if (!(ft_init_game(&state)))
 		return (-1);

@@ -31,7 +31,5 @@ double	get_sprite_text(t_state *state, t_coord I, int k)
 	V2.y = -V.x / get_vector_norm(V);
 	V2.z = 0;
 	r = (U.x * V2.x) + (U.y * V2.y) + (U.z * V2.z) + 0.5;
-	// printf("coord plyx = %f\n", state->player_pos.x);
-	// printf("coord plyy = %f\n", state->player_pos.y);
 	return (r);
 }

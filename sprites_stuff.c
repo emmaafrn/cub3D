@@ -74,27 +74,16 @@ void	ft_planes_sprites(t_state *state)
 	}
 }
 
-int	check_coord(t_inter inter, t_state *state, int k)
+int	ft_keep_inter(t_state *state, t_inter inter, int k, double t)
 {
-	double	A;
-	double	B;
-	double	C;
-	t_coord	decimal_s;
-	t_coord	decimal_i;
-
-	decimal_i.x = inter.coord.x - (int)inter.coord.x;
-	decimal_i.y = inter.coord.y - (int)inter.coord.y;
-	decimal_s.y = 0.5;
-	decimal_s.x = 0.5;
-	A = decimal_s.y - decimal_i.y;
-	B = decimal_s.x - decimal_i.x;
-	C = sqrt(pow(A, 2) + pow(B, 2));
-	if (C <= 0.5)
-		return (1);
-	return (0);
+	state->sprite_tab[k].inter.coord.x = inter.coord.x;
+	state->sprite_tab[k].inter.coord.y = inter.coord.y;
+	state->sprite_tab[k].inter.coord.z = inter.coord.z;
+	state->sprite_tab[k].inter.t = t;
+	return (k);
 }
 
-int	ft_find_sprite(t_vector dir, t_state *state, int i, int j, int sprite_num)
+int	ft_find_sprite(t_vector dir, t_state *state, int sprite_num)
 {
 	int			k;
 	double		t;
@@ -115,14 +104,7 @@ int	ft_find_sprite(t_vector dir, t_state *state, int i, int j, int sprite_num)
 			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight) \
 			&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 2)
 			{
-				if (check_coord(inter, state, k) == 1)
-				{
-					state->sprite_tab[k].inter.coord.x = inter.coord.x;
-					state->sprite_tab[k].inter.coord.y = inter.coord.y;
-					state->sprite_tab[k].inter.coord.z = inter.coord.z;
-					state->sprite_tab[k].inter.t = t;
-					return (k);
-				}
+				return (ft_keep_inter(state, inter, k, t));
 			}
 		}
 		k++;

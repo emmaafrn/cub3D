@@ -79,6 +79,13 @@ typedef		struct	s_wall_text
 	int				result;
 }					t_wall_text;
 
+typedef		struct	s_eastnwest
+{
+	double			t2;
+	int				text2;
+}					t_eastnwest;
+
+
 typedef		struct	s_state
 {
 	t_struct		map;
@@ -137,10 +144,12 @@ int				release_key(int keycode, t_state *state);
 void			ft_mem_sprite_tab(t_state *state);
 void			ft_coord_sprites(t_state *state);
 void			ft_planes_sprites(t_state *state);
-int				ft_find_sprite(t_vector dir, t_state *state, int i, int j, int sprite_number);
+int				ft_find_sprite(t_vector dir, t_state *state, int sprite_num);
 t_wall_text		ft_texture(double t1, double t2, int text1, int text2);
 t_wall_text		ft_find_texture(t_state *state, int i, int j);
-void			mlx_get_texture(t_state *state);
+t_eastnwest		check_east_n_west(t_state *state, int j, int i, t_eastnwest res);
+int				mlx_get_texture_first(t_state *state);
+int				mlx_get_texture(t_state *state);
 double			get_vector_norm(t_vector U);
 double			get_sprite_text(t_state *state, t_coord I, int k);
 

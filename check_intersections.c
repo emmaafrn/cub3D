@@ -1,5 +1,20 @@
 #include "cub3d.h"
 
+double	is_there_wall(t_coord *inter_wall, t_inter inter)
+{
+	if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
+		&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight)
+		&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 1)
+	{
+		inter_wall->x = inter.coord.x;
+		inter_wall->y = inter.coord.y;
+		inter_wall->z = inter.coord.z;
+	}
+	else
+		inter.t = -1;
+	return (inter.t);
+}
+
 double	check_north(t_state *state, int i, int j)
 {
 	int		l;
@@ -14,17 +29,9 @@ double	check_north(t_state *state, int i, int j)
 		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
 		if (inter.t >= 0)
 		{
-			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
-			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight)
-			&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 1)
-			{
-				state->inter1_wall.x = inter.coord.x;
-				state->inter1_wall.y = inter.coord.y;
-				state->inter1_wall.z = inter.coord.z;
+			inter.t = is_there_wall(&state->inter1_wall, inter);
+			if (inter.t != -1)
 				return (inter.t);
-			}
-			else
-				inter.t = -1;
 		}
 		l--;
 	}
@@ -45,17 +52,9 @@ double	check_south(t_state *state, int i, int j)
 		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
 		if (inter.t >= 0)
 		{
-			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
-			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight)
-			&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 1)
-			{
-				state->inter1_wall.x = inter.coord.x;
-				state->inter1_wall.y = inter.coord.y;
-				state->inter1_wall.z = inter.coord.z;
+			inter.t = is_there_wall(&state->inter1_wall, inter);
+			if (inter.t != -1)
 				return (inter.t);
-			}
-			else
-				inter.t = -1;
 		}
 		l++;
 	}
@@ -76,17 +75,9 @@ double	check_east(t_state *state, int i, int j)
 		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
 		if (inter.t >= 0)
 		{
-			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
-			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight)
-			&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 1)
-			{
-				state->inter2_wall.x = inter.coord.x;
-				state->inter2_wall.y = inter.coord.y;
-				state->inter2_wall.z = inter.coord.z;
+			inter.t = is_there_wall(&state->inter2_wall, inter);
+			if (inter.t != -1)
 				return (inter.t);
-			}
-			else
-				inter.t = -1;
 		}
 		l++;
 	}
@@ -107,17 +98,9 @@ double	check_west(t_state *state, int i, int j)
 		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
 		if (inter.t >= 0)
 		{
-			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth
-			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight)
-			&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 1)
-			{
-				state->inter2_wall.x = inter.coord.x;
-				state->inter2_wall.y = inter.coord.y;
-				state->inter2_wall.z = inter.coord.z;
+			inter.t = is_there_wall(&state->inter2_wall, inter);
+			if (inter.t != -1)
 				return (inter.t);
-			}
-			else
-				inter.t = -1;
 		}
 		l--;
 	}

@@ -216,7 +216,7 @@ int		main(int arc, char **arv)
 
 	i = 0;
 	if (arc > 0)
-		tab = ismapvalid(arv);
+		tab = ismapvalid(arv, arc);
 	if (tab == NULL)
 	{
 		printf("%d\n", -1);
