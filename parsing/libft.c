@@ -1,4 +1,5 @@
 #include "../cub3d.h"
+#include "../get_next_line.h"
 
 char	**ft_split(char const *s, char c)
 {
@@ -64,7 +65,7 @@ char	*ft_strdup(const char *s)
 
 	i = 0;
 	dup = NULL;
-	dup = malloc((ft_strlen(s) * sizeof(char) + 1));
+	dup = wrmalloc((ft_strlen(s) * sizeof(char) + 1));
 	if (dup == NULL)
 		return (0);
 	while (s[i])

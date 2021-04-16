@@ -3,6 +3,7 @@
 t_vector	create_vector(double x, double y, double z)
 {
 	t_vector	new;
+
 	new.x = x;
 	new.y = y;
 	new.z = z;
@@ -12,6 +13,7 @@ t_vector	create_vector(double x, double y, double z)
 t_vector	addition_v(t_vector v1, t_vector v2)
 {
 	t_vector	new;
+
 	new.x = v1.x + v2.x;
 	new.y = v1.y + v2.y;
 	new.z = v1.z + v2.z;
@@ -21,6 +23,7 @@ t_vector	addition_v(t_vector v1, t_vector v2)
 t_vector	multi_v(t_vector v1, t_vector v2)
 {
 	t_vector	new;
+
 	new.x = v1.x * v2.x;
 	new.y = v1.y * v2.y;
 	new.z = v1.z * v2.z;

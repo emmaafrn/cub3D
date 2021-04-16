@@ -2,6 +2,7 @@
 
 int	key_hook(int keycode, t_state *state)
 {
+	printf("keycode = %d\n", keycode);
 	if (keycode == KEY_D)
 		state->D_key = 1;
 	if (keycode == KEY_A)
@@ -92,7 +93,7 @@ int	ft_loop(t_state *state)
 		state->angle = 0;
 	if (state->angle < 0)
 		state->angle += 360;
-	ft_ray_dir(state);
+	// ft_ray_dir(state);
 	ft_planes_sprites(state);
 	ft_intersections(state);
 	return (0);

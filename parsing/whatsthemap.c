@@ -6,11 +6,12 @@
 /*   By: bmoulin <bmoulin@42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 14:25:41 by efarin            #+#    #+#             */
-/*   Updated: 2021/04/10 17:51:09 by bmoulin          ###   ########lyon.fr   */
+/*   Updated: 2021/04/14 16:52:45 by bmoulin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
+#include "../get_next_line.h"
 
 int	is_in(char c, char *str)
 {

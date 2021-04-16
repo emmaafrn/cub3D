@@ -1,7 +1,6 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "parsing/parsing.h"
 # include <mlx.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -85,10 +84,8 @@ typedef		struct	s_eastnwest
 	int				text2;
 }					t_eastnwest;
 
-
 typedef		struct	s_state
 {
-	t_struct		map;
 	void			*mlx;
 	void			*win;
 	void			*img;
@@ -101,7 +98,6 @@ typedef		struct	s_state
 	t_plane			*x_plane;
 	t_plane			*y_plane;
 	double			angle;
-	int				k;
 	int				i_plane;
 	t_plane			*plane;
 	t_coord			inter1_wall;
@@ -135,7 +131,6 @@ double			check_west(t_state *state, int i, int j);
 double			ft_fmax(double a, double b);
 double			ft_fmin(double a, double b);
 t_coord			rectif_pos(t_state *state, t_plane plane, t_coord inter);
-void			ft_orientation(t_state *state, int i, int j);
 void			ft_intersections(t_state *state);
 int				key_hook(int keycode, t_state *state);
 void			d_or_a_key(t_state *state);
@@ -152,5 +147,11 @@ int				mlx_get_texture_first(t_state *state);
 int				mlx_get_texture(t_state *state);
 double			get_vector_norm(t_vector U);
 double			get_sprite_text(t_state *state, t_coord I, int k);
+void			ft_sort_sprites(t_state *state);
+void			ft_smaller_dist(t_state *state, int i, int j, double dist_min);
+int				ft_is_sprite_printed(t_state *state, int sprite_num, int i, int j);
+int				ft_print_sprite(t_state *state, int i, int j, int result);
+void			ft_print_the_right_pixel(t_state *state, int i, int j);
+
 
 #endif
