@@ -33,7 +33,7 @@ int	mlx_get_texture(t_state *state)
 		return (0);
 	state->text[3].addr = mlx_get_data_addr(state->text[3].img, &state->text[3].bits_per_pixel, \
 	&state->text[3].line_length, &state->text[3].endian);
-	state->text[4].img = mlx_xpm_file_to_image(state->mlx, "./xpm/waw.xpm", \
+	state->text[4].img = mlx_xpm_file_to_image(state->mlx, "./xpm/sprite.xpm", \
 	&state->text[4].width, &state->text[4].height);
 	if (state->text[4].img == NULL)
 		return (0);

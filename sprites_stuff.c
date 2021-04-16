@@ -51,6 +51,43 @@ void	ft_coord_sprites(t_state *state)
 	}
 }
 
+void	ft_sort_sprites(t_state *state)
+{
+	double	dist_min;
+	t_vector	v;
+	t_sprite	temp;
+	double	dist;
+	int	i;
+	int	j;
+
+	i = 0;
+	dist = INT_MAX;
+	while (i < state->nb_sprites)
+	{
+		v.x = (state->sprite_tab[i].coord.x + 0.5)- state->player_pos.x;
+		v.y = (state->sprite_tab[i].coord.y + 0.5) - state->player_pos.y;
+		v.z = 0;
+		dist_min = get_vector_norm(v);
+		j = state->nb_sprites - 1;
+		while (dist >= dist_min && j > i)
+		{
+			v.x = (state->sprite_tab[j].coord.x + 0.5) - state->player_pos.x;
+			v.y = (state->sprite_tab[j].coord.y + 0.5) - state->player_pos.y;
+			v.z = 0;
+			dist = get_vector_norm(v);
+			if (dist < dist_min)
+			{
+				temp = state->sprite_tab[i];
+				state->sprite_tab[i] = state->sprite_tab[j];
+				state->sprite_tab[j] = temp;
+				dist_min = dist;
+			}
+			j--;
+		}
+		i++;
+	}
+}
+
 void	ft_planes_sprites(t_state *state)
 {
 	int			i;
@@ -58,6 +95,7 @@ void	ft_planes_sprites(t_state *state)
 
 	ft_mem_sprite_tab(state);
 	ft_coord_sprites(state);
+	ft_sort_sprites(state);
 	i = 0;
 	while (i < state->nb_sprites)
 	{

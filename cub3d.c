@@ -98,26 +98,20 @@ void	ft_orientation(t_state *state, int i, int j)
 	sprite_num = -1;
 	printed = 0;
 	color = 0xFF;
-	while (sprite_num != -2 && sprite_num < state->nb_sprites)
+	while (sprite_num != -2 && sprite_num < state->nb_sprites && printed == 0)
 	{
-		// printf("AAAAA\n");
 		sprite_num = ft_find_sprite(state->dir_ray[j][i], state, sprite_num + 1);
 		if (sprite_num != -2 && (result == 5 || state->sprite_tab[sprite_num].inter.t < state->wall_text.t))
 		{
-			// printf("BBBBBB\n");
 			ratioSx = 1 - get_sprite_text(state, state->sprite_tab[sprite_num].inter.coord, sprite_num);
 			imgx = (state->text[4].width - 1) * ratioSx;
 			imgy = (state->text[4].height - 1) * state->sprite_tab[sprite_num].inter.coord.z;
 			if (ratioSx >= 0 && ratioSx < 1)
 			{
-				// printf("CCCCCC\n");
 				color = *(unsigned int*)get_pixel(&state->text[4], imgx, imgy);
 				if (color > 0xFF)
 				{
-					// printf("DDDDDDD\n");
 					my_mlx_pixel_put(state, i, j, color);
-					// if (i == screenWidth / 2 && j == screenHeight / 2)
-					// 	printf("I AM HERE !!! %d\n", color);
 					printed = 1;
 				}
 			}
