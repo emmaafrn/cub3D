@@ -66,11 +66,19 @@ int		main(int arc, char **arv)
 	ft_planes(&state);
 	ft_ray_dir(&state);
 	if (!(ft_init_game(&state)))
+	{
+		printf("Erreur lors de la creation de la fenêtre !");
+		free(state.dir_ray);
 		return (-1);
-	mlx_get_texture(&state);
+	}
+	if (!(mlx_get_texture(&state)))
+	{
+		printf("Erreur de récupération des textures !");
+		free(state.dir_ray);
+		return (-1);
+	}
 	mlx_hook(state.win, 2, 0, key_hook, &state);
 	mlx_hook(state.win, 3, 0, release_key, &state);
 	mlx_loop_hook(state.mlx, ft_loop, &state);
-	// ft_intersections(&state);
 	mlx_loop(state.mlx);
 }

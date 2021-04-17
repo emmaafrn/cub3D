@@ -62,14 +62,17 @@ void	ft_intersections(t_state *state)
 		i = 0;
 		while (i < screenWidth)
 		{
-			if (state->right_key == 1 || state->left_key == 1)
+			if (state->angle_temp)
+			{
 				state->dir_ray[j][i] = rotate_vector_z(state->dir_ray[j][i], \
-			(state->angle * (M_PI / 180)));
+				(state->angle_temp * (M_PI / 180)));
+			}
 			ft_print_the_right_pixel(state, i, j);
 			i++;
 		}
 		j++;
 	}
+	state->angle_temp = 0;
 	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);
 }
 

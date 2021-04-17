@@ -20,8 +20,8 @@
 #define KEY_ESC 53
 #define mapWidth 24
 #define mapHeight 8
-#define screenWidth 300
-#define screenHeight 300
+#define screenWidth 800
+#define screenHeight 600
 
 extern int	worldMap[mapHeight][mapWidth];
 
@@ -98,6 +98,7 @@ typedef		struct	s_state
 	t_plane			*x_plane;
 	t_plane			*y_plane;
 	double			angle;
+	double			angle_temp;
 	int				i_plane;
 	t_plane			*plane;
 	t_coord			inter1_wall;
