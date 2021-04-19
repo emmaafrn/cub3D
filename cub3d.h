@@ -22,6 +22,7 @@
 #define mapHeight 8
 #define screenWidth 800
 #define screenHeight 600
+#define RAD M_PI / 180
 
 extern int	worldMap[mapHeight][mapWidth];
 
@@ -45,6 +46,7 @@ typedef		struct	s_planes
 	double				b;
 	double				c;
 	double				d;
+	double				rs;
 }					t_plane;
 
 typedef		struct	s_inter
@@ -113,6 +115,7 @@ typedef		struct	s_state
 	t_textures		*text;
 	int				nb_sprites;
 	t_sprite		*sprite_tab;
+	int				pxl_color;
 }					t_state;
 
 void			my_mlx_pixel_put(t_state *state, int x, int y, int color);
@@ -153,6 +156,8 @@ void			ft_smaller_dist(t_state *state, int i, int j, double dist_min);
 int				ft_is_sprite_printed(t_state *state, int sprite_num, int i, int j);
 int				ft_print_sprite(t_state *state, int i, int j, int result);
 void			ft_print_the_right_pixel(t_state *state, int i, int j);
-
+double			calc_dividend(t_plane p, double rs, t_coord pos);
+void			distance_dividend_wall(t_coord pos, t_plane *plane, int limit);
+void			distance_dividend_sprites(t_state *state);
 
 #endif

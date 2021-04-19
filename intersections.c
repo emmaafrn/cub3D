@@ -32,7 +32,7 @@ void	ft_ray_dir(t_state *state)
 	int		j;
 
 	j = 0;
-	r_h = (2 * tan((60 * M_PI / 180) / 2)) / screenWidth;
+	r_h = (2 * tan((60 * RAD) / 2)) / screenWidth;
 	r_v = (r_h * screenHeight) / screenWidth;
 	state->dir_ray = malloc(screenHeight * sizeof(t_vector *));
 	while (j < screenHeight)
@@ -55,7 +55,6 @@ void	ft_intersections(t_state *state)
 	int		i;
 	int		j;
 
-	i = 0;
 	j = 0;
 	while (j < screenHeight)
 	{
@@ -65,9 +64,13 @@ void	ft_intersections(t_state *state)
 			if (state->angle_temp)
 			{
 				state->dir_ray[j][i] = rotate_vector_z(state->dir_ray[j][i], \
-				(state->angle_temp * (M_PI / 180)));
+				state->angle_temp);
 			}
 			ft_print_the_right_pixel(state, i, j);
+			if ((screenHeight - j) % 2 == 0 && (screenWidth - i) % 2 == 0)
+			{
+				
+			}
 			i++;
 		}
 		j++;
@@ -84,8 +87,7 @@ double	ft_distance(t_state *state, t_plane plane, t_vector dir)
 	divisor = ((plane.a * dir.x) + (plane.b * dir.y));
 	if (divisor == 0)
 		return (-1);
-	t = -(((plane.a * state->player_pos.x) \
-	+ (plane.b * state->player_pos.y) + plane.d) / divisor);
+	t = -(plane.rs / divisor);
 	if (t < 0)
 		return (-1);
 	return (t);
@@ -104,10 +106,14 @@ t_inter	ft_get_coord(t_vector dir, t_state *state, int i, int j)
 	inter.coord.y = state->player_pos.y + (t * dir.y);
 	inter.coord.z = state->player_pos.z + (t * dir.z);
 	inter.coord = rectif_pos(state, state->plane[state->i_plane], inter.coord);
-	if (inter.coord.z < 0)
-		my_mlx_pixel_put(state, i, j, 0x00FF00);
-	else if (inter.coord.z > 1)
-		my_mlx_pixel_put(state, i, j, 0x0000FF);
+	if (inter.coord.z < 0 || inter.coord.z > 1)
+	{
+		if (inter.coord.z < 0)
+			state->pxl_color = 0x00FF00;
+		else
+			state->pxl_color = 0x0000FF;
+		my_mlx_pixel_put(state, i, j, state->pxl_color);
+	}
 	else if (inter.coord.z >= 0 && inter.coord.z <= 1)
 		return (inter);
 	inter.t = -1;

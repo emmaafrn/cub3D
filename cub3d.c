@@ -77,6 +77,8 @@ int		main(int arc, char **arv)
 		free(state.dir_ray);
 		return (-1);
 	}
+	ft_mem_sprite_tab(&state);
+	ft_coord_sprites(&state);
 	mlx_hook(state.win, 2, 0, key_hook, &state);
 	mlx_hook(state.win, 3, 0, release_key, &state);
 	mlx_loop_hook(state.mlx, ft_loop, &state);

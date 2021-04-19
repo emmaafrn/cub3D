@@ -56,8 +56,6 @@ void	ft_planes_sprites(t_state *state)
 	int			i;
 	t_vector	v;
 
-	ft_mem_sprite_tab(state);
-	ft_coord_sprites(state);
 	ft_sort_sprites(state);
 	i = 0;
 	while (i < state->nb_sprites)

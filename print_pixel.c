@@ -18,6 +18,7 @@ int	ft_is_sprite_printed(t_state *state, int sprite_num, int i, int j)
 		if (color > 0xFF)
 		{
 			my_mlx_pixel_put(state, i, j, color);
+			state->pxl_color = color;
 			return (1);
 		}
 	}
@@ -61,7 +62,8 @@ void	ft_print_the_right_pixel(t_state *state, int i, int j)
 				decimal = 1 - decimal;
 			imgx = (state->text[result].width - 1) * decimal;
 			imgy = (state->text[result].height - 1) * state->inter2_wall.z;
-			my_mlx_pixel_put(state, i, j, *(unsigned int *)get_pixel(&state->text[result], imgx, imgy));
+			state->pxl_color = *(unsigned int *)get_pixel(&state->text[result], imgx, imgy)
+			my_mlx_pixel_put(state, i, j, state->plx_color);
 		}
 		else if (result == 0 || result == 3)
 		{
@@ -70,7 +72,8 @@ void	ft_print_the_right_pixel(t_state *state, int i, int j)
 				decimal = 1 - decimal;
 			imgx = (state->text[result].width - 1) * decimal;
 			imgy = (state->text[result].height - 1) * state->inter1_wall.z;
-			my_mlx_pixel_put(state, i, j, *(unsigned int *)get_pixel(&state->text[result], imgx, imgy));
+			state->pxl_color = *(unsigned int *)get_pixel(&state->text[result], imgx, imgy)
+			my_mlx_pixel_put(state, i, j, state->plx_color);
 		}
 	}
 }

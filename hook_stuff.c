@@ -45,16 +45,16 @@ void	d_or_a_key(t_state *state)
 	{
 		if (state->player_pos.x < mapWidth)
 		{
-			state->player_pos.x += 0.5 * cos(state->angle * (M_PI / 180));
-			state->player_pos.y += 0.5 * sin(state->angle * (M_PI / 180));
+			state->player_pos.x += 0.5 * cos(state->angle);
+			state->player_pos.y += 0.5 * sin(state->angle);
 		}
 	}
 	if (state->A_key == 1)
 	{
 		if (state->player_pos.x > 0)
 		{
-			state->player_pos.x += -0.5 * cos(state->angle * (M_PI / 180));
-			state->player_pos.y += -0.5 * sin(state->angle * (M_PI / 180));
+			state->player_pos.x += -0.5 * cos(state->angle);
+			state->player_pos.y += -0.5 * sin(state->angle);
 		}
 	}
 }
@@ -65,16 +65,16 @@ void	w_or_s_key(t_state *state)
 	{
 		if (state->player_pos.y > 0)
 		{
-			state->player_pos.x += -0.5 * -sin(state->angle * (M_PI / 180));
-			state->player_pos.y += -0.5 * cos(state->angle * (M_PI / 180));
+			state->player_pos.x += -0.5 * -sin(state->angle);
+			state->player_pos.y += -0.5 * cos(state->angle);
 		}
 	}
 	if (state->S_key == 1)
 	{
 		if (state->player_pos.y < mapHeight)
 		{
-			state->player_pos.x += 0.5 * -sin(state->angle * (M_PI / 180));
-			state->player_pos.y += 0.5 * cos(state->angle * (M_PI / 180));
+			state->player_pos.x += 0.5 * -sin(state->angle);
+			state->player_pos.y += 0.5 * cos(state->angle);
 		}
 	}
 }
@@ -87,26 +87,28 @@ int	ft_loop(t_state *state)
 		w_or_s_key(state);
 	if (state->right_key == 1)
 	{
-		state->angle += 5;
-		state->angle_temp += 5;
+		state->angle += (5 * RAD);
+		state->angle_temp += (5 * RAD);
 	}
 	if (state->left_key == 1)
 	{
-		state->angle -= 5;
-		state->angle_temp -= 5;
+		state->angle -= (5 * RAD);
+		state->angle_temp -= (5 * RAD);
 	}
-	if (state->angle == 360)
+	if (state->angle == (360 * RAD))
 	{
 		state->angle = 0;
 		state->angle_temp = 0;
 	}
-	if (state->angle < 0)
+	if (state->angle / RAD < 0)
 	{
-		state->angle += 360;
-		state->angle_temp += 360;
+		state->angle += (360 * RAD);
+		state->angle_temp += (360 * RAD);
 	}
-	// ft_ray_dir(state);
+	distance_dividend_wall(state->player_pos, state->y_plane, mapWidth);
+	distance_dividend_wall(state->player_pos, state->x_plane, mapHeight);
 	ft_planes_sprites(state);
+	distance_dividend_sprites(state);
 	ft_intersections(state);
 	return (0);
 }
