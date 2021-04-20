@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "../parsing.h"
 
 int	whatstheid(char *line, t_struct *mstruct)
 {

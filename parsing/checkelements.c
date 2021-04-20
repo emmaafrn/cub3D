@@ -1,4 +1,4 @@
-#include "../cub3d.h"
+#include "../parsing.h"
 #include "../get_next_line.h"
 
 void	checkelemR(char *line, t_struct *mstruct)

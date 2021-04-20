@@ -67,13 +67,10 @@ void	ft_intersections(t_state *state)
 				state->angle_temp);
 			}
 			ft_print_the_right_pixel(state, i, j);
-			if ((screenHeight - j) % 2 == 0 && (screenWidth - i) % 2 == 0)
-			{
-				
-			}
-			i++;
+			scaling_pixel_color(i, j, state, 2);
+			i += 2;
 		}
-		j++;
+		j += 2;
 	}
 	state->angle_temp = 0;
 	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);

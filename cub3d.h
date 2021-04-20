@@ -1,6 +1,7 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include "parsing/parsing.h"
 # include <mlx.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -87,7 +88,8 @@ typedef		struct	s_eastnwest
 }					t_eastnwest;
 
 typedef		struct	s_state
-{
+{ 
+	t_struct		parse;
 	void			*mlx;
 	void			*win;
 	void			*img;
@@ -159,5 +161,6 @@ void			ft_print_the_right_pixel(t_state *state, int i, int j);
 double			calc_dividend(t_plane p, double rs, t_coord pos);
 void			distance_dividend_wall(t_coord pos, t_plane *plane, int limit);
 void			distance_dividend_sprites(t_state *state);
+t_coord			scaling_pixel_color(int i, int j, t_state *state, int scale);
 
 #endif

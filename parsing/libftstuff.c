@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "../parsing.h"
 #include "../get_next_line.h"
 
 char	*ft_strcpy(char *dst, const char *src, size_t dstsize)

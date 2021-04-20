@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "../parsing.h"
 
 static size_t	ft_check(char c, char const *set)
 {

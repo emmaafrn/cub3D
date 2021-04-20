@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "../parsing.h"
 #include "../get_next_line.h"
 
 int	ret_free(char **line)

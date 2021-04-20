@@ -1,4 +1,4 @@
-#include "../cub3d.h"
+#include "../parsing.h"
 #include "../get_next_line.h"
 
 char	**ft_split(char const *s, char c)

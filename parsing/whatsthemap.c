@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "../parsing.h"
 #include "../get_next_line.h"
 
 int	is_in(char c, char *str)

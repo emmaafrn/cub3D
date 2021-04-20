@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../get_next_line.h"
-#include "../cub3d.h"
+#include "../parsing.h"
 
 char	**fromlsttotab(t_list **alst, t_struct *mstruct)
 {
