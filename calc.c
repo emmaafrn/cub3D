@@ -39,10 +39,10 @@ t_coord	scaling_pixel_color(int i, int j, t_state *state, int scale)
 	t_coord	pxl;
 
 	pxl.y = j;
-	while (pxl.y < (j + scale) && pxl.y < screenHeight)
+	while (pxl.y < (j + scale) && pxl.y < state->parse.Ry)
 	{
 		pxl.x = i;
-		while (pxl.x < (i + scale) && pxl.x < screenWidth)
+		while (pxl.x < (i + scale) && pxl.x < state->parse.Rx)
 		{
 			my_mlx_pixel_put(state, pxl.x, pxl.y, state->pxl_color);
 			pxl.x++;

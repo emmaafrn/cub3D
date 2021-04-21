@@ -1,5 +1,4 @@
-#include "../parsing.h"
-#include "../get_next_line.h"
+#include "cub3d.h"
 
 void	checkelemR(char *line, t_struct *mstruct)
 {
@@ -75,7 +74,7 @@ void	checkelemF(char *line, t_struct *mstruct)
 		if (i > start)
 			elem = ft_split(ft_strtrim(ft_substr(line, start, i), " "), ',');
 		i = 0;
-		floor_color(elem, line, mstruct);
+		floor_color(elem, mstruct);
 	}
 }
 
@@ -100,6 +99,6 @@ void	checkelemC(char *line, t_struct *mstruct)
 		if (i > start)
 			elem = ft_split(ft_strtrim(ft_substr(line, start, i), " "), ',');
 		i = 0;
-		sky_color(elem, line, mstruct);
+		sky_color(elem, mstruct);
 	}
 }

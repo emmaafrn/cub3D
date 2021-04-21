@@ -11,18 +11,17 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include "parsing/parsing.h"
 
-int	worldMap[mapHeight][mapWidth]=
+void		get_hmap(t_state *state)
 {
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-	{1,1,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,2,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
+	int	i;
+
+	i = 0;
+	while (state->parse.map[i] != NULL)
+		i++;
+	state->parse.hmap = i;
+}
 
 void		my_mlx_pixel_put(t_state *state, int x, int y, int color)
 {
@@ -40,8 +39,8 @@ int		ft_init_game(t_state *state)
 	state->A_key = 0;
 	state->left_key = 0;
 	state->right_key = 0;
-	state->player_pos.x = 5.5;
-	state->player_pos.y = 4.5;
+	state->player_pos.x = state->parse.xplayer;
+	state->player_pos.y = state->parse.yplayer;
 	state->player_pos.z = 0.5;
 	state->inter1_wall.x = -1;
 	state->inter1_wall.y = -1;
@@ -52,8 +51,8 @@ int		ft_init_game(t_state *state)
 	state->mlx = mlx_init();
 	if (state->mlx == NULL)
 		return (0);
-	state->win = mlx_new_window(state->mlx, screenWidth, screenHeight, "cub3d");
-	state->img = mlx_new_image(state->mlx, screenWidth, screenHeight);
+	state->win = mlx_new_window(state->mlx, state->parse.Rx, state->parse.Ry, "cub3d");
+	state->img = mlx_new_image(state->mlx, state->parse.Rx, state->parse.Ry);
 	state->addr = mlx_get_data_addr(state->img, &state->bits_per_pixel, &state->line_length, &state->endian);
 	state->text = malloc (5 * sizeof(t_textures));
 	return (state->win != NULL || state->text != NULL);
@@ -62,18 +61,25 @@ int		ft_init_game(t_state *state)
 int		main(int arc, char **arv)
 {
 	t_state		state;
-	
+
+	state.parse = *ismapvalid(arv);
+	get_hmap(&state);
+	if (!state.parse.map)
+	{
+		printf("Mauvaise map, réessayes !\n");
+		return (-1);
+	}
 	ft_planes(&state);
 	ft_ray_dir(&state);
 	if (!(ft_init_game(&state)))
 	{
-		printf("Erreur lors de la creation de la fenêtre !");
+		printf("Erreur lors de la creation de la fenêtre !\n");
 		free(state.dir_ray);
 		return (-1);
 	}
 	if (!(mlx_get_texture(&state)))
 	{
-		printf("Erreur de récupération des textures !");
+		printf("Erreur de récupération des textures !\n");
 		free(state.dir_ray);
 		return (-1);
 	}

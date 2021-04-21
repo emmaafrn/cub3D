@@ -1,5 +1,5 @@
-#include "../parsing.h"
-#include "../get_next_line.h"
+#include "cub3d.h"
+#include "get_next_line.h"
 
 t_list	*ft_lstnew(void *content)
 {
@@ -69,18 +69,16 @@ t_list	*makelst(int fd, t_struct *mstruct)
 	while (result == 1)
 	{
 		result = get_next_line(fd, &line);
-		mstruct->i = shouldiskip(line, mstruct, 0);
+		mstruct->i = shouldiskip(line, mstruct);
 		if (mstruct->i == 0)
 		{
 			new = ft_lstnew(line);
 			ft_lstadd_back(&thelist, new);
 		}
 		if (mstruct->i == -1)
-		{
-			wrfree(line);
-			ft_lstclear(&thelist, free);
-			return (NULL);
-		}
+			return (error_makelst(&line, thelist));
+		if (mstruct->i != 0)
+			free(line);
 	}
 	return (thelist);
 }

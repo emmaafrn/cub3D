@@ -6,13 +6,13 @@
 /*   By: bmoulin <bmoulin@42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 17:01:11 by efarin            #+#    #+#             */
-/*   Updated: 2021/04/14 16:49:57 by bmoulin          ###   ########lyon.fr   */
+/*   Updated: 2021/04/21 15:17:08 by bmoulin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
+#include "cub3d.h"
 
-static size_t	ft_check(char c, char const *set)
+size_t	ft_check(char c, char const *set)
 {
 	size_t	i;
 
@@ -26,8 +26,10 @@ static size_t	ft_check(char c, char const *set)
 	return (0);
 }
 
-static char	*ft_putzero(char *str, size_t i)
+char	*ft_putzero(size_t i)
 {
+	char	*str;
+
 	str = wrmalloc(1 * sizeof(char));
 	str[i] = '\0';
 	return (str);
@@ -52,7 +54,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	while (ft_check(s1[l], set) == 1 && l > 0)
 		l--;
 	if (j == ft_strlen(s1))
-		return (ft_putzero(str, i));
+		return (ft_putzero(i));
 	str = wrmalloc((l - j + 2) * sizeof(char));
 	if (str == NULL)
 		return (NULL);
@@ -60,4 +62,11 @@ char	*ft_strtrim(char const *s1, char const *set)
 		str[i++] = s1[j++];
 	str[i] = '\0';
 	return (str);
+}
+
+t_list	*error_makelst(char **line, t_list *thelist)
+{
+	wrfree(*line);
+	ft_lstclear(&thelist, free);
+	return (NULL);
 }

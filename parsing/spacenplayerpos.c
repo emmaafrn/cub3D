@@ -1,7 +1,6 @@
-#include "../parsing.h"
-#include "../get_next_line.h"
+#include "cub3d.h"
 
-int	checkspaces(char **tab, t_struct *mstruct, int i, int j)
+int	checkspaces(char **tab, int i, int j)
 {
 	if (tab[i][j + 1] != ' ' && tab[i - 1][j] != ' ' && tab[i][j - 1] != ' ')
 		return (1);
@@ -21,5 +20,5 @@ int	checkplayerposition(char **tab, t_struct *mstruct)
 	j = mstruct->xplayer;
 	if (i == k - 1 || i == 0 || j == 0 || j == mstruct->lenmax - 1)
 		return (0);
-	return (checkspaces(tab, mstruct, i, j));
+	return (checkspaces(tab, i, j));
 }

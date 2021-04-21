@@ -6,12 +6,11 @@
 /*   By: bmoulin <bmoulin@42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 10:56:29 by efarin            #+#    #+#             */
-/*   Updated: 2021/04/14 16:51:22 by bmoulin          ###   ########lyon.fr   */
+/*   Updated: 2021/04/16 14:49:02 by bmoulin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
-#include "../get_next_line.h"
+#include "cub3d.h"
 
 char	*ft_strcpy(char *dst, const char *src, size_t dstsize)
 {
@@ -104,9 +103,9 @@ char	**ft_mem(char const *s, char c)
 		j = 0;
 		while (s[k] == c)
 			k++;
-		while (s[k] != c && s[k++])
+		while (s[k] && s[k] != c && s[k++])
 			j++;
-		tab[i] = malloc((j + 1) * sizeof(char));
+		tab[i] = wrmalloc((j + 1) * sizeof(char));
 		if (!(tab[i]))
 			return ((char **)ft_free(tab, i));
 	}

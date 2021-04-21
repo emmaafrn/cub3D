@@ -19,13 +19,11 @@
 #define KEY_LEFT 123
 #define KEY_RIGHT 124
 #define KEY_ESC 53
-#define mapWidth 24
-#define mapHeight 8
 #define screenWidth 800
 #define screenHeight 600
 #define RAD M_PI / 180
 
-extern int	worldMap[mapHeight][mapWidth];
+// extern int	worldMap[mapHeight][mapWidth];
 
 typedef		struct	s_vector
 {
@@ -130,6 +128,7 @@ t_vector		create_vector(double x, double y, double z);
 t_vector		rotate_vector_z(t_vector vector, double angle);
 double			ft_distance(t_state *state, t_plane plane, t_vector dir);
 t_inter			ft_get_coord(t_vector dir, t_state *state, int i, int j);
+double			is_there_wall(t_coord *inter_wall, t_inter inter, t_state *state);
 double			check_north(t_state *state, int i, int j);
 double			check_south(t_state *state, int i, int j);
 double			check_east(t_state *state, int i, int j);

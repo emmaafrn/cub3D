@@ -5,9 +5,9 @@ void	ft_planes(t_state *state)
 	int	i;
 
 	i = -1;
-	state->x_plane = malloc(mapHeight * (sizeof(t_plane)));
-	state->y_plane = malloc(mapWidth * (sizeof(t_plane)));
-	while (++i < mapHeight)
+	state->x_plane = malloc(state->parse.hmap * (sizeof(t_plane)));
+	state->y_plane = malloc(state->parse.lenmax * (sizeof(t_plane)));
+	while (++i < state->parse.hmap)
 	{
 		state->x_plane[i].a = 0;
 		state->x_plane[i].b = 1;
@@ -15,7 +15,7 @@ void	ft_planes(t_state *state)
 		state->x_plane[i].d = -i;
 	}
 	i = -1;
-	while (++i < mapWidth)
+	while (++i < state->parse.lenmax)
 	{
 		state->y_plane[i].a = 1;
 		state->y_plane[i].b = 0;
@@ -32,18 +32,18 @@ void	ft_ray_dir(t_state *state)
 	int		j;
 
 	j = 0;
-	r_h = (2 * tan((60 * RAD) / 2)) / screenWidth;
-	r_v = (r_h * screenHeight) / screenWidth;
-	state->dir_ray = malloc(screenHeight * sizeof(t_vector *));
-	while (j < screenHeight)
+	r_h = (2 * tan((60 * RAD) / 2)) / state->parse.Rx;
+	r_v = (r_h * state->parse.Ry) / state->parse.Rx;
+	state->dir_ray = malloc(state->parse.Ry * sizeof(t_vector *));
+	while (j < state->parse.Ry)
 	{
-		state->dir_ray[j] = malloc(screenWidth * sizeof(t_vector));
+		state->dir_ray[j] = malloc(state->parse.Rx * sizeof(t_vector));
 		i = 0;
-		while (i < screenWidth)
+		while (i < state->parse.Rx)
 		{
-			state->dir_ray[j][i].x = (i - (screenWidth * 0.5)) * r_h;
+			state->dir_ray[j][i].x = (i - (state->parse.Rx * 0.5)) * r_h;
 			state->dir_ray[j][i].y = -1;
-			state->dir_ray[j][i].z = -(j - (screenHeight * 0.5)) * r_v;
+			state->dir_ray[j][i].z = -(j - (state->parse.Ry * 0.5)) * r_v;
 			i++;
 		}
 		j++;
@@ -56,10 +56,10 @@ void	ft_intersections(t_state *state)
 	int		j;
 
 	j = 0;
-	while (j < screenHeight)
+	while (j < state->parse.Ry)
 	{
 		i = 0;
-		while (i < screenWidth)
+		while (i < state->parse.Rx)
 		{
 			if (state->angle_temp)
 			{

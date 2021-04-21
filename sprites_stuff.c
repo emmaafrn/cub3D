@@ -8,12 +8,12 @@ void	ft_mem_sprite_tab(t_state *state)
 
 	y = 0;
 	nb = 0;
-	while (y < mapHeight)
+	while (y < state->parse.hmap)
 	{
 		x = 0;
-		while (x < mapWidth)
+		while (x < state->parse.lenmax)
 		{
-			if (worldMap[y][x] == 2)
+			if (state->parse.map[y][x] == '2')
 				nb++;
 			x++;
 		}
@@ -33,12 +33,12 @@ void	ft_coord_sprites(t_state *state)
 
 	y = 0;
 	i = 0;
-	while (y < mapHeight)
+	while (y < state->parse.hmap)
 	{
 		x = 0;
-		while (x < mapWidth)
+		while (x < state->parse.lenmax)
 		{
-			if (worldMap[y][x] == 2)
+			if (state->parse.map[y][x] == '2')
 			{
 				state->sprite_tab[i].coord.x = x;
 				state->sprite_tab[i].coord.y = y;
@@ -99,9 +99,9 @@ int	ft_find_sprite(t_vector dir, t_state *state, int sprite_num)
 		rectif_pos(state, state->sprite_tab[k].plane, inter.coord);
 		if (t > 0 && inter.coord.z >= 0 && inter.coord.z <= 1)
 		{
-			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < mapWidth \
-			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < mapHeight) \
-			&& worldMap[(int)inter.coord.y][(int)inter.coord.x] == 2)
+			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < state->parse.lenmax \
+			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < state->parse.hmap) \
+			&& state->parse.map[(int)inter.coord.y][(int)inter.coord.x] == '2')
 				return (ft_keep_inter(state, inter, k, t));
 		}
 		k++;

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
+#include "cub3d.h"
 
 void	split_structinit(t_struct *mstruct)
 {

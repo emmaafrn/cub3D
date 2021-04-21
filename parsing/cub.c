@@ -6,18 +6,16 @@
 /*   By: bmoulin <bmoulin@42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 10:33:03 by efarin            #+#    #+#             */
-/*   Updated: 2021/04/14 16:49:48 by bmoulin          ###   ########lyon.fr   */
+/*   Updated: 2021/04/21 15:01:34 by bmoulin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../get_next_line.h"
-#include "../parsing.h"
+#include "cub3d.h"
 
 char	**fromlsttotab(t_list **alst, t_struct *mstruct)
 {
 	char			**tab;
 	int				i;
-	int				lenmax;
 	t_list			*lst;
 
 	i = 0;
@@ -33,6 +31,7 @@ char	**fromlsttotab(t_list **alst, t_struct *mstruct)
 			return (NULL);
 		ft_bzero(tab[i], mstruct->lenmax + 1);
 		tab[i] = ft_strcpy(tab[i], lst->content, ft_strlen(lst->content));
+		free(lst->content);
 		lst = lst->next;
 		i++;
 	}
@@ -82,7 +81,7 @@ int	checkthefilename(char **arv)
 	return (-1);
 }
 
-t_struct	*ismapvalid(char **arv, int arc)
+t_struct	*ismapvalid(char **arv)
 {
 	int				fd;
 	t_list			*lst;

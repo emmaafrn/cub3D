@@ -6,11 +6,11 @@
 /*   By: bmoulin <bmoulin@42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/18 11:21:06 by efarin            #+#    #+#             */
-/*   Updated: 2021/04/14 18:46:01 by bmoulin          ###   ########lyon.fr   */
+/*   Updated: 2021/04/21 14:45:04 by bmoulin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
+#include "cub3d.h"
 
 int	whatstheid(char *line, t_struct *mstruct)
 {
@@ -97,7 +97,7 @@ int	secondpartmap(char *line, t_struct *mstruct, int y)
 	return (-1);
 }
 
-int	shouldiskip(char *line, t_struct *mstruct, int a)
+int	shouldiskip(char *line, t_struct *mstruct)
 {
 	static int	x = 0;
 	int			y;

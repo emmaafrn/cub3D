@@ -6,12 +6,11 @@
 /*   By: bmoulin <bmoulin@42lyon.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 14:25:41 by efarin            #+#    #+#             */
-/*   Updated: 2021/04/14 16:52:45 by bmoulin          ###   ########lyon.fr   */
+/*   Updated: 2021/04/15 15:06:36 by bmoulin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parsing.h"
-#include "../get_next_line.h"
+#include "cub3d.h"
 
 int	is_in(char c, char *str)
 {
@@ -55,7 +54,7 @@ int	checkalltab(char **tab, t_struct *mstruct)
 	return (1);
 }
 
-int	checkthenorth(char **tab, t_struct *mstruct)
+int	checkthenorth(char **tab)
 {
 	int	i;
 	int	j;
@@ -75,14 +74,14 @@ int	thereiszeroortwo(int i, int j, char **tab, t_struct *mstruct)
 	{
 		if (j == 0 || j == (mstruct->lenmax - 1) || tab[i + 1] == NULL)
 			return (0);
-		if (checkspaces(tab, mstruct, i, j) == 0)
+		if (checkspaces(tab, i, j) == 0)
 			return (0);
 	}
 	else
 	{
 		if (j == 0 || j == (mstruct->lenmax - 1) || tab[i + 1] == NULL)
 			return (0);
-		if (checkspaces(tab, mstruct, i, j) == 0)
+		if (checkspaces(tab, i, j) == 0)
 			return (0);
 	}
 	return (1);
@@ -94,7 +93,7 @@ int	checkthemap(char **tab, t_struct *mstruct)
 	int	j;
 
 	i = 0;
-	if (checkalltab(tab, mstruct) == 0 || checkthenorth(tab, mstruct) == 0 \
+	if (checkalltab(tab, mstruct) == 0 || checkthenorth(tab) == 0 \
 	|| mstruct->position == '0' || checkplayerposition(tab, mstruct) == 0)
 		return (0);
 	while (tab[i] != NULL)

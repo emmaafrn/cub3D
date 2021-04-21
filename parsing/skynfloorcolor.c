@@ -1,7 +1,6 @@
-#include "../parsing.h"
-#include "../get_next_line.h"
+#include "cub3d.h"
 
-void	sky_color(char	**elem, char *line, t_struct *mstruct)
+void	sky_color(char **elem, t_struct *mstruct)
 {
 	int	i;
 
@@ -20,7 +19,7 @@ void	sky_color(char	**elem, char *line, t_struct *mstruct)
 	}
 }
 
-void	floor_color(char **elem, char *line, t_struct *mstruct)
+void	floor_color(char **elem, t_struct *mstruct)
 {
 	int	i;
 
