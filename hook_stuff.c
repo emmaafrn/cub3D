@@ -2,7 +2,7 @@
 
 int	key_hook(int keycode, t_state *state)
 {
-	// printf("keycode = %d\n", keycode);
+	printf("keycode = %d\n", keycode);
 	if (keycode == KEY_D)
 		state->D_key = 1;
 	if (keycode == KEY_A)
@@ -15,8 +15,12 @@ int	key_hook(int keycode, t_state *state)
 		state->right_key = 1;
 	if (keycode == KEY_LEFT)
 		state->left_key = 1;
+	if (keycode == KEY_UP)
+		state->up_key = 1;
+	if (keycode == KEY_DOWN)
+		state->down_key = 1;
 	if (keycode == KEY_ESC)
-		exit(0);
+		ft_free_n_exit(state);
 	return (0);
 }
 
@@ -34,8 +38,12 @@ int	release_key(int keycode, t_state *state)
 		state->right_key = 0;
 	if (keycode == KEY_LEFT)
 		state->left_key = 0;
+	if (keycode == KEY_UP)
+		state->up_key = 0;
+	if (keycode == KEY_DOWN)
+		state->down_key = 0;
 	if (keycode == KEY_ESC)
-		exit(0);
+		ft_free_n_exit(state);
 	return (0);
 }
 
@@ -43,7 +51,7 @@ void	d_or_a_key(t_state *state)
 {
 	if (state->D_key == 1)
 	{
-		if (state->player_pos.x < state->parse.lenmax)
+		if (state->player_pos.x < state->parse.lenmax - 0.5)
 		{
 			state->player_pos.x += 0.5 * cos(state->angle);
 			state->player_pos.y += 0.5 * sin(state->angle);
@@ -51,7 +59,7 @@ void	d_or_a_key(t_state *state)
 	}
 	if (state->A_key == 1)
 	{
-		if (state->player_pos.x > 0)
+		if (state->player_pos.x >= 0.5)
 		{
 			state->player_pos.x += -0.5 * cos(state->angle);
 			state->player_pos.y += -0.5 * sin(state->angle);
@@ -63,7 +71,7 @@ void	w_or_s_key(t_state *state)
 {
 	if (state->W_key == 1)
 	{
-		if (state->player_pos.y > 0)
+		if (state->player_pos.y > 0.5)
 		{
 			state->player_pos.x += -0.5 * -sin(state->angle);
 			state->player_pos.y += -0.5 * cos(state->angle);
@@ -71,7 +79,7 @@ void	w_or_s_key(t_state *state)
 	}
 	if (state->S_key == 1)
 	{
-		if (state->player_pos.y < state->parse.hmap)
+		if (state->player_pos.y < state->parse.hmap - 0.5)
 		{
 			state->player_pos.x += 0.5 * -sin(state->angle);
 			state->player_pos.y += 0.5 * cos(state->angle);

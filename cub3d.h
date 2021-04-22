@@ -18,12 +18,12 @@
 #define KEY_W 13
 #define KEY_LEFT 123
 #define KEY_RIGHT 124
+#define KEY_UP 126
+#define KEY_DOWN 125
 #define KEY_ESC 53
 #define screenWidth 800
 #define screenHeight 600
 #define RAD M_PI / 180
-
-// extern int	worldMap[mapHeight][mapWidth];
 
 typedef		struct	s_vector
 {
@@ -112,6 +112,8 @@ typedef		struct	s_state
 	int				S_key;
 	int				left_key;
 	int				right_key;
+	int				up_key;
+	int				down_key;
 	t_textures		*text;
 	int				nb_sprites;
 	t_sprite		*sprite_tab;
@@ -120,12 +122,13 @@ typedef		struct	s_state
 
 void			my_mlx_pixel_put(t_state *state, int x, int y, int color);
 char			*get_pixel(t_textures *text, int x, int y);
-void			ft_planes(t_state *state);
+int				ft_planes(t_state *state);
 void			ft_ray_dir(t_state *state);
 int				ft_loop(t_state *state);
 int				ft_init_game(t_state *state);
 t_vector		create_vector(double x, double y, double z);
 t_vector		rotate_vector_z(t_vector vector, double angle);
+t_vector		rotate_vector_x(t_vector vector, double angle);
 double			ft_distance(t_state *state, t_plane plane, t_vector dir);
 t_inter			ft_get_coord(t_vector dir, t_state *state, int i, int j);
 double			is_there_wall(t_coord *inter_wall, t_inter inter, t_state *state);
@@ -161,5 +164,6 @@ double			calc_dividend(t_plane p, double rs, t_coord pos);
 void			distance_dividend_wall(t_coord pos, t_plane *plane, int limit);
 void			distance_dividend_sprites(t_state *state);
 t_coord			scaling_pixel_color(int i, int j, t_state *state, int scale);
+void			ft_free_n_exit(t_state *state);
 
 #endif

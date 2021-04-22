@@ -43,7 +43,6 @@ typedef struct s_struct
 	int		C_R;
 	int		C_G;
 	int		C_B;
-	int		northside;
 	char	position;
 	int		xplayer;
 	int		yplayer;

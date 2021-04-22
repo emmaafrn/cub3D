@@ -35,7 +35,6 @@ void	structinit(t_struct *mstruct)
 	mstruct->Rx = 0;
 	mstruct->Ry = 0;
 	mstruct->i = 0;
-	mstruct->northside = 0;
 	mstruct->position = '0';
 	mstruct->xplayer = 0;
 	mstruct->yplayer = 0;

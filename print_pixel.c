@@ -55,7 +55,6 @@ void	ft_print_the_right_pixel(t_state *state, int i, int j)
 	result = state->wall_text.result;
 	if (ft_print_sprite(state, i, j, result) == 0)
 	{
-		// printf("result = %d\n", result);
 		if (result == 1 || result == 2)
 		{
 			decimal = state->inter2_wall.y - (double)(long int)state->inter2_wall.y;

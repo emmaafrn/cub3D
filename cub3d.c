@@ -31,6 +31,27 @@ void		my_mlx_pixel_put(t_state *state, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
+void	ft_get_parse_infos(t_state *state)
+{
+	if (state->parse.position == 'W')
+		state->angle = 270 * RAD;
+	if (state->parse.position == 'E')
+		state->angle = 90 * RAD;
+	if (state->parse.position == 'S')
+		state->angle = 180 * RAD;
+	state->angle_temp = state->angle;
+}
+
+void	ft_free_n_exit(t_state *state)
+{
+	ft_free(state->dir_ray, (state->parse.Rx * state->parse.Ry));
+	free(state->y_plane);
+	free(state->x_plane);
+	if (state->sprite_tab)
+		free(state->sprite_tab);
+	exit(0);
+}
+
 int		ft_init_game(t_state *state)
 {
 	state->W_key = 0;
@@ -39,8 +60,8 @@ int		ft_init_game(t_state *state)
 	state->A_key = 0;
 	state->left_key = 0;
 	state->right_key = 0;
-	state->player_pos.x = state->parse.xplayer;
-	state->player_pos.y = state->parse.yplayer;
+	state->player_pos.x = (double)state->parse.xplayer + 0.5;
+	state->player_pos.y = (double)state->parse.yplayer + 0.5;
 	state->player_pos.z = 0.5;
 	state->inter1_wall.x = -1;
 	state->inter1_wall.y = -1;
@@ -67,22 +88,17 @@ int		main(int arc, char **arv)
 	if (!state.parse.map)
 	{
 		printf("Mauvaise map, réessayes !\n");
-		return (-1);
+		ft_free_n_exit(&state);
 	}
-	ft_planes(&state);
 	ft_ray_dir(&state);
-	if (!(ft_init_game(&state)))
-	{
-		printf("Erreur lors de la creation de la fenêtre !\n");
-		free(state.dir_ray);
-		return (-1);
-	}
+	if (!ft_planes(&state) || !(ft_init_game(&state)))
+		ft_free_n_exit(&state);
 	if (!(mlx_get_texture(&state)))
 	{
 		printf("Erreur de récupération des textures !\n");
-		free(state.dir_ray);
-		return (-1);
+		ft_free_n_exit(&state);
 	}
+	ft_get_parse_infos(&state);
 	ft_mem_sprite_tab(&state);
 	ft_coord_sprites(&state);
 	mlx_hook(state.win, 2, 0, key_hook, &state);

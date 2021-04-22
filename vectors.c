@@ -39,3 +39,13 @@ t_vector	rotate_vector_z(t_vector vector, double angle)
 	new_y = sin(angle) * vector.x + cos(angle) * vector.y;
 	return (create_vector(new_x, new_y, vector.z));
 }
+
+t_vector	rotate_vector_x(t_vector vector, double angle)
+{
+	double	new_y;
+	double	new_z;
+
+	new_y = cos(angle) * vector.y - sin(angle) * vector.z;
+	new_z = sin(angle) * vector.y + cos(angle) * vector.z;
+	return (create_vector(vector.x, new_y, new_z));
+}

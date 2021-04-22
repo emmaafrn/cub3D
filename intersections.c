@@ -1,12 +1,14 @@
 #include "cub3d.h"
 
-void	ft_planes(t_state *state)
+int	ft_planes(t_state *state)
 {
 	int	i;
 
 	i = -1;
 	state->x_plane = malloc(state->parse.hmap * (sizeof(t_plane)));
 	state->y_plane = malloc(state->parse.lenmax * (sizeof(t_plane)));
+	if (state->x_plane == 0 || state->y_plane == 0)
+		return (0);
 	while (++i < state->parse.hmap)
 	{
 		state->x_plane[i].a = 0;
@@ -22,6 +24,7 @@ void	ft_planes(t_state *state)
 		state->y_plane[i].c = 0;
 		state->y_plane[i].d = -i;
 	}
+	return (1);
 }
 
 void	ft_ray_dir(t_state *state)

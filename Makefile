@@ -13,7 +13,7 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = -I. -O2 -g3 -fsanitize=address #-Wall -Wextra -Werror #-Ofast
+CFLAGS = -I. -O2 #-g3 -fsanitize=address #-Wall -Wextra -Werror #-Ofast
 
 all:		$(NAME)
 
