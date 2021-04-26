@@ -26,7 +26,7 @@ double	check_north(t_state *state, int i, int j)
 	while (l >= 0 && inter.t < 0)
 	{
 		state->i_plane = l;
-		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
+		inter = ft_get_coord(state->temp, state, i, j);
 		if (inter.t >= 0)
 		{
 			inter.t = is_there_wall(&state->inter1_wall, inter, state);
@@ -49,7 +49,7 @@ double	check_south(t_state *state, int i, int j)
 	while (l < state->parse.hmap && inter.t < 0)
 	{
 		state->i_plane = l;
-		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
+		inter = ft_get_coord(state->temp, state, i, j);
 		if (inter.t >= 0)
 		{
 			inter.t = is_there_wall(&state->inter1_wall, inter, state);
@@ -72,7 +72,7 @@ double	check_east(t_state *state, int i, int j)
 	while (l < state->parse.lenmax && inter.t < 0)
 	{
 		state->i_plane = l;
-		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
+		inter = ft_get_coord(state->temp, state, i, j);
 		if (inter.t >= 0)
 		{
 			inter.t = is_there_wall(&state->inter2_wall, inter, state);
@@ -95,7 +95,7 @@ double	check_west(t_state *state, int i, int j)
 	while (l >= 0 && inter.t < 0)
 	{
 		state->i_plane = l;
-		inter = ft_get_coord(state->dir_ray[j][i], state, i, j);
+		inter = ft_get_coord(state->temp, state, i, j);
 		if (inter.t >= 0)
 		{
 			inter.t = is_there_wall(&state->inter2_wall, inter, state);

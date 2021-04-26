@@ -33,12 +33,12 @@ t_wall_text	ft_texture(double t1, double t2, int text1, int text2)
 
 t_eastnwest	check_east_n_west(t_state *state, int j, int i, t_eastnwest res)
 {
-	if (state->dir_ray[j][i].x >= 0)
+	if (state->temp.x >= 0)
 	{
 		res.t2 = check_east(state, i, j);
 		res.text2 = 1;
 	}
-	else if (state->dir_ray[j][i].x <= 0)
+	else if (state->temp.x <= 0)
 	{
 		res.t2 = check_west(state, i, j);
 		res.text2 = 2;
@@ -53,7 +53,7 @@ t_wall_text	ft_find_texture(t_state *state, int i, int j)
 	int			text1;
 
 	res.t2 = -1;
-	if (state->dir_ray[j][i].y <= 0)
+	if (state->temp.y <= 0)
 	{
 		t1 = check_north(state, i, j);
 		text1 = 0;

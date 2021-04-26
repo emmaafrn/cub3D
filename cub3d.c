@@ -39,7 +39,6 @@ void	ft_get_parse_infos(t_state *state)
 		state->angle = 90 * RAD;
 	if (state->parse.position == 'S')
 		state->angle = 180 * RAD;
-	state->angle_temp = state->angle;
 }
 
 void	ft_free_n_exit(t_state *state)
@@ -60,6 +59,9 @@ int		ft_init_game(t_state *state)
 	state->A_key = 0;
 	state->left_key = 0;
 	state->right_key = 0;
+	state->z_angle = 0;
+	state->up_key = 0;
+	state->down_key = 0;
 	state->player_pos.x = (double)state->parse.xplayer + 0.5;
 	state->player_pos.y = (double)state->parse.yplayer + 0.5;
 	state->player_pos.z = 0.5;

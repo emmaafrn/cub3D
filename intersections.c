@@ -64,18 +64,17 @@ void	ft_intersections(t_state *state)
 		i = 0;
 		while (i < state->parse.Rx)
 		{
-			if (state->angle_temp)
-			{
-				state->dir_ray[j][i] = rotate_vector_z(state->dir_ray[j][i], \
-				state->angle_temp);
-			}
+			state->temp = state->dir_ray[j][i];
+			state->temp = rotate_vector_x(state->temp, \
+			state->z_angle);
+			state->temp = rotate_vector_z(state->temp, \
+			state->angle);
 			ft_print_the_right_pixel(state, i, j);
 			scaling_pixel_color(i, j, state, 2);
 			i += 2;
 		}
 		j += 2;
 	}
-	state->angle_temp = 0;
 	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);
 }
 

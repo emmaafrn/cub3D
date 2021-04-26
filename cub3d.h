@@ -100,7 +100,7 @@ typedef		struct	s_state
 	t_plane			*x_plane;
 	t_plane			*y_plane;
 	double			angle;
-	double			angle_temp;
+	double			z_angle;
 	int				i_plane;
 	t_plane			*plane;
 	t_coord			inter1_wall;
@@ -118,6 +118,7 @@ typedef		struct	s_state
 	int				nb_sprites;
 	t_sprite		*sprite_tab;
 	int				pxl_color;
+	t_vector		temp;
 }					t_state;
 
 void			my_mlx_pixel_put(t_state *state, int x, int y, int color);
@@ -165,5 +166,6 @@ void			distance_dividend_wall(t_coord pos, t_plane *plane, int limit);
 void			distance_dividend_sprites(t_state *state);
 t_coord			scaling_pixel_color(int i, int j, t_state *state, int scale);
 void			ft_free_n_exit(t_state *state);
+t_vector		addition_v(t_vector v1, t_vector v2);
 
 #endif

@@ -36,7 +36,7 @@ int	ft_print_sprite(t_state *state, int i, int j, int result)
 	while (sprite_num != -2 && sprite_num < state->nb_sprites && printed == 0)
 	{
 		sprite_num = \
-		ft_find_sprite(state->dir_ray[j][i], state, sprite_num + 1);
+		ft_find_sprite(state->temp, state, sprite_num + 1);
 		if (sprite_num != -2 && (result == 5 \
 		|| state->sprite_tab[sprite_num].inter.t < state->wall_text.t))
 			printed = ft_is_sprite_printed(state, sprite_num, i, j);
