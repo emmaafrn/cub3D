@@ -119,6 +119,7 @@ typedef		struct	s_state
 	t_sprite		*sprite_tab;
 	int				pxl_color;
 	t_vector		temp;
+	t_coord			ply_temp;
 }					t_state;
 
 void			my_mlx_pixel_put(t_state *state, int x, int y, int color);
@@ -167,5 +168,6 @@ void			distance_dividend_sprites(t_state *state);
 t_coord			scaling_pixel_color(int i, int j, t_state *state, int scale);
 void			ft_free_n_exit(t_state *state);
 t_vector		addition_v(t_vector v1, t_vector v2);
+void			ft_collision(t_state *state);
 
 #endif

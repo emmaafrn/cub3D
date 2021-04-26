@@ -51,19 +51,13 @@ void	d_or_a_key(t_state *state)
 {
 	if (state->D_key == 1)
 	{
-		if (state->player_pos.x < state->parse.lenmax - 0.5)
-		{
-			state->player_pos.x += 0.5 * cos(state->angle);
-			state->player_pos.y += 0.5 * sin(state->angle);
-		}
+		state->player_pos.x += 0.5 * cos(state->angle);
+		state->player_pos.y += 0.5 * sin(state->angle);
 	}
 	if (state->A_key == 1)
 	{
-		if (state->player_pos.x >= 0.5)
-		{
-			state->player_pos.x += -0.5 * cos(state->angle);
-			state->player_pos.y += -0.5 * sin(state->angle);
-		}
+		state->player_pos.x += -0.5 * cos(state->angle);
+		state->player_pos.y += -0.5 * sin(state->angle);
 	}
 }
 
@@ -71,19 +65,13 @@ void	w_or_s_key(t_state *state)
 {
 	if (state->W_key == 1)
 	{
-		if (state->player_pos.y > 0.5)
-		{
-			state->player_pos.x += -0.5 * -sin(state->angle);
-			state->player_pos.y += -0.5 * cos(state->angle);
-		}
+		state->player_pos.x += -0.5 * -sin(state->angle);
+		state->player_pos.y += -0.5 * cos(state->angle);
 	}
 	if (state->S_key == 1)
 	{
-		if (state->player_pos.y < state->parse.hmap - 0.5)
-		{
-			state->player_pos.x += 0.5 * -sin(state->angle);
-			state->player_pos.y += 0.5 * cos(state->angle);
-		}
+		state->player_pos.x += 0.5 * -sin(state->angle);
+		state->player_pos.y += 0.5 * cos(state->angle);
 	}
 }
 
@@ -97,10 +85,14 @@ void	up_or_down(t_state *state)
 
 int	ft_loop(t_state *state)
 {
+	state->ply_temp = state->player_pos;
 	if (state->D_key == 1 || state->A_key == 1)
 		d_or_a_key(state);
 	if (state->W_key == 1 || state->S_key == 1)
 		w_or_s_key(state);
+	printf("plyr X = %f\n", state->player_pos.x);
+	printf("plyr Y = %f\n", state->player_pos.y);
+	ft_collision(state);
 	if (state->up_key == 1 || state->down_key == 1)
 		up_or_down(state);
 	if (state->right_key == 1)
