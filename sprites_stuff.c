@@ -91,7 +91,7 @@ int	ft_find_sprite(t_vector dir, t_state *state, int sprite_num)
 	k = sprite_num;
 	while (k < state->nb_sprites)
 	{
-		t = ft_distance(state, state->sprite_tab[k].plane, dir);
+		t = ft_distance(state->sprite_tab[k].plane, dir);
 		inter.coord.x = state->player_pos.x + (t * dir.x);
 		inter.coord.y = state->player_pos.y + (t * dir.y);
 		inter.coord.z = state->player_pos.z + (t * dir.z);

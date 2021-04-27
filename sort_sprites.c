@@ -34,7 +34,7 @@ void	ft_sort_sprites(t_state *state)
 	i = 0;
 	while (i < state->nb_sprites)
 	{
-		v.x = (state->sprite_tab[i].coord.x + 0.5)- state->player_pos.x;
+		v.x = (state->sprite_tab[i].coord.x + 0.5) - state->player_pos.x;
 		v.y = (state->sprite_tab[i].coord.y + 0.5) - state->player_pos.y;
 		v.z = 0;
 		dist_min = get_vector_norm(v);

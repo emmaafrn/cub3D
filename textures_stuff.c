@@ -13,6 +13,8 @@ t_wall_text	ft_texture(double t1, double t2, int text1, int text2)
 {
 	t_wall_text	wall_text;
 
+	wall_text.result = 0;
+	wall_text.t = 0;
 	if (t1 == -1 && t2 == -1)
 	{
 		wall_text.t = -1;

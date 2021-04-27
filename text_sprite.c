@@ -4,7 +4,7 @@ double	get_vector_norm(t_vector U)
 {
 	double	vector_norm;
 
-	vector_norm = sqrt(pow(U.x,2) + pow(U.y,2) + pow(U.z, 2));
+	vector_norm = sqrt(pow(U.x, 2) + pow(U.y, 2) + pow(U.z, 2));
 	return (vector_norm);
 }
 
@@ -25,8 +25,6 @@ double	get_sprite_text(t_state *state, t_coord I, int k)
 	V.x = P.x - state->player_pos.x;
 	V.y = P.y - state->player_pos.y;
 	V.z = 0;
-	// if (get_vector_norm(U) > 0.5)
-	// 	return (-1);
 	V2.x = V.y / get_vector_norm(V);
 	V2.y = -V.x / get_vector_norm(V);
 	V2.z = 0;

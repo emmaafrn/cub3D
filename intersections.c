@@ -53,7 +53,7 @@ void	ft_ray_dir(t_state *state)
 	}
 }
 
-void	ft_intersections(t_state *state)
+void	ft_intersections(t_state *state, int scale)
 {
 	int		i;
 	int		j;
@@ -70,15 +70,15 @@ void	ft_intersections(t_state *state)
 			state->temp = rotate_vector_z(state->temp, \
 			state->angle);
 			ft_print_the_right_pixel(state, i, j);
-			scaling_pixel_color(i, j, state, 2);
-			i += 2;
+			scaling_pixel_color(i, j, state, scale);
+			i += scale;
 		}
-		j += 2;
+		j += scale;
 	}
 	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);
 }
 
-double	ft_distance(t_state *state, t_plane plane, t_vector dir)
+double	ft_distance(t_plane plane, t_vector dir)
 {
 	double	t;
 	double	divisor;
@@ -97,7 +97,7 @@ t_inter	ft_get_coord(t_vector dir, t_state *state, int i, int j)
 	double	t;
 	t_inter	inter;
 
-	t = ft_distance(state, state->plane[state->i_plane], dir);
+	t = ft_distance(state->plane[state->i_plane], dir);
 	inter.t = t;
 	if (t == -1)
 		return (inter);

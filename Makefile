@@ -5,7 +5,7 @@ SRC =	parsing/checkelements.c parsing/cub.c parsing/ft_strtrim.c parsing/ft_subs
 		parsing/skynfloorcolor.c parsing/spacenplayerpos.c parsing/structstuff.c parsing/whatsthemap.c parsing/ft_wrmalloc.c\
 		cub3d.c vectors.c check_intersections.c rectif_pos.c sprites_stuff.c\
 		hook_stuff.c textures_stuff.c text_sprite.c mlx_text.c print_pixel.c\
-		sort_sprites.c intersections.c calc.c collision.c
+		sort_sprites.c intersections.c calc.c collision.c deplacements.c init_vars.c free_n_exit.c\
 
 OBJ = ${SRC:.c=.o}
 
@@ -13,7 +13,7 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = -I. -O2 #-g3 -fsanitize=address #-Wall -Wextra -Werror #-Ofast
+CFLAGS = -I. -O2 -Wall -Wextra -Werror #-Ofast #-g3 -fsanitize=address 
 
 all:		$(NAME)
 

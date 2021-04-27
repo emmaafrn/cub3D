@@ -29,7 +29,6 @@ int	ft_print_sprite(t_state *state, int i, int j, int result)
 {
 	int		sprite_num;
 	int		printed;
-	int		color;
 
 	sprite_num = -1;
 	printed = 0;
@@ -42,6 +41,23 @@ int	ft_print_sprite(t_state *state, int i, int j, int result)
 			printed = ft_is_sprite_printed(state, sprite_num, i, j);
 	}
 	return (printed);
+}
+
+void	print_south_or_north(t_state *state, int result, int i, int j)
+{
+	double	decimal;
+	int		imgx;
+	int		imgy;
+
+	decimal = state->inter1_wall.x
+		- (double)(long int)state->inter1_wall.x;
+	if (result == 3)
+		decimal = 1 - decimal;
+	imgx = (state->text[result].width - 1) * decimal;
+	imgy = (state->text[result].height - 1) * state->inter1_wall.z;
+	state->pxl_color = *(unsigned int *)get_pixel(&state->text[result],
+			imgx, imgy);
+	my_mlx_pixel_put(state, i, j, state->pxl_color);
 }
 
 void	ft_print_the_right_pixel(t_state *state, int i, int j)
@@ -57,23 +73,17 @@ void	ft_print_the_right_pixel(t_state *state, int i, int j)
 	{
 		if (result == 1 || result == 2)
 		{
-			decimal = state->inter2_wall.y - (double)(long int)state->inter2_wall.y;
+			decimal = state->inter2_wall.y
+				- (double)(long int)state->inter2_wall.y;
 			if (result == 2)
 				decimal = 1 - decimal;
 			imgx = (state->text[result].width - 1) * decimal;
 			imgy = (state->text[result].height - 1) * state->inter2_wall.z;
-			state->pxl_color = *(unsigned int *)get_pixel(&state->text[result], imgx, imgy);
+			state->pxl_color = *(unsigned int *)get_pixel(&state->text[result],
+					imgx, imgy);
 			my_mlx_pixel_put(state, i, j, state->pxl_color);
 		}
 		else if (result == 0 || result == 3)
-		{
-			decimal = state->inter1_wall.x - (double)(long int)state->inter1_wall.x;
-			if (result == 3)
-				decimal = 1 - decimal;
-			imgx = (state->text[result].width - 1) * decimal;
-			imgy = (state->text[result].height - 1) * state->inter1_wall.z;
-			state->pxl_color = *(unsigned int *)get_pixel(&state->text[result], imgx, imgy);
-			my_mlx_pixel_put(state, i, j, state->pxl_color);
-		}
+			print_south_or_north(state, result, i, j);
 	}
 }
