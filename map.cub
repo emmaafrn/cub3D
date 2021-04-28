@@ -1,11 +1,11 @@
-R 800 600
+R 1000 40
 NO ./png/mossy.png
 SO ./png/purplestone.png
 WE ./png/redbrick.png
 EA ./png/greystone.png
 S ./xpm/waw.xpm
-F 254,100,0
-C 225,30,0
+F 255,100,40
+C 225,30,110
 
 11111111111111111111111111111
 11000000000000000000000000001

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   textures_stuff.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 09:00:55 by efarin            #+#    #+#             */
+/*   Updated: 2021/04/28 09:00:57 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 char	*get_pixel(t_textures *text, int x, int y)
@@ -9,7 +21,7 @@ char	*get_pixel(t_textures *text, int x, int y)
 	return (dst);
 }
 
-t_wall_text	ft_texture(double t1, double t2, int text1, int text2)
+inline t_wall_text	ft_texture(double t1, double t2, int text1, int text2)
 {
 	t_wall_text	wall_text;
 
@@ -33,39 +45,39 @@ t_wall_text	ft_texture(double t1, double t2, int text1, int text2)
 	return (wall_text);
 }
 
-t_eastnwest	check_east_n_west(t_state *state, int j, int i, t_eastnwest res)
+inline t_eastnwest	check_east_n_west(t_thread *data, int j, int i, t_eastnwest res)
 {
-	if (state->temp.x >= 0)
+	if (data->temp.x >= 0)
 	{
-		res.t2 = check_east(state, i, j);
+		res.t2 = check_east(data, i, j);
 		res.text2 = 1;
 	}
-	else if (state->temp.x <= 0)
+	else if (data->temp.x <= 0)
 	{
-		res.t2 = check_west(state, i, j);
+		res.t2 = check_west(data, i, j);
 		res.text2 = 2;
 	}
 	return (res);
 }
 
-t_wall_text	ft_find_texture(t_state *state, int i, int j)
+t_wall_text	ft_find_texture(t_thread *data, int i, int j)
 {
 	t_eastnwest	res;
 	double		t1;
 	int			text1;
 
 	res.t2 = -1;
-	if (state->temp.y <= 0)
+	if (data->temp.y <= 0)
 	{
-		t1 = check_north(state, i, j);
+		t1 = check_north(data, i, j);
 		text1 = 0;
-		res = check_east_n_west(state, j, i, res);
+		res = check_east_n_west(data, j, i, res);
 	}
 	else
 	{
-		t1 = check_south(state, i, j);
+		t1 = check_south(data, i, j);
 		text1 = 3;
-		res = check_east_n_west(state, j, i, res);
+		res = check_east_n_west(data, j, i, res);
 	}
 	return (ft_texture(t1, res.t2, text1, res.text2));
 }

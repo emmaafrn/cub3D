@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hook_stuff.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 08:58:54 by efarin            #+#    #+#             */
+/*   Updated: 2021/04/28 08:58:55 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int	key_hook(int keycode, t_state *state)
@@ -54,7 +66,7 @@ int	release_key(int keycode, t_state *state)
 	return (0);
 }
 
-void	d_or_a_key(t_state *state)
+inline void	d_or_a_key(t_state *state)
 {
 	if (state->D_key == 1)
 	{
@@ -93,6 +105,9 @@ int	ft_loop(t_state *state)
 		state->parse.hmap);
 	ft_planes_sprites(state);
 	distance_dividend_sprites(state);
-	ft_intersections(state, 2);
+	pthread_mutex_lock(&state->thread_data.mutex);
+	pthread_cond_broadcast(&state->render_cond);
+	pthread_cond_wait(&state->thread_data.done_cond,&state->thread_data.mutex);
+	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);
 	return (0);
 }

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_text.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 08:59:37 by efarin            #+#    #+#             */
+/*   Updated: 2021/04/28 08:59:39 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-int	mlx_get_texture_first(t_state *state)
+inline int	mlx_get_texture_first(t_state *state)
 {
 	state->text[0].img = mlx_png_file_to_image(state->mlx, state->parse.pathtoNO, \
 	&state->text[0].width, &state->text[0].height);

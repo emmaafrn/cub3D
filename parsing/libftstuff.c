@@ -30,31 +30,31 @@ char	*ft_strcpy(char *dst, const char *src, size_t dstsize)
 	return (dst);
 }
 
-int	ft_atoi(const char *nptr)
+int ft_atoi(const char *nptr)
 {
 	int			i;
 	int			s;
-	long int	result;
-
+	long long	result;
 	i = 0;
 	s = 1;
 	result = 0;
 	while ((nptr[i] >= 8 && nptr[i] <= 13) || nptr[i] == ' ')
 		i++;
 	if (nptr[i] == '+' || nptr[i] == '-')
-	{
-		if (nptr[i] == '-')
+		if (nptr[++i] == '-')
 			s = s * (-1);
-		i++;
-	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
 		result = (result * 10) + nptr[i] - '0';
+		if (result >= INT_MAX)
+			return (INT_MAX);
 		i++;
 	}
 	if (nptr[i] != '\0')
 		return (-1);
 	result = result * s;
+	if (result >= INT_MAX)
+		return (INT_MAX);
 	return ((int)result);
 }
 

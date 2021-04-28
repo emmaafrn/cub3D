@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rectif_pos.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 08:59:59 by efarin            #+#    #+#             */
+/*   Updated: 2021/04/28 09:00:02 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-double	ft_fmax(double a, double b)
+inline double	ft_fmax(double a, double b)
 {
 	if (a < b)
 		return (b);
@@ -8,7 +20,7 @@ double	ft_fmax(double a, double b)
 		return (a);
 }
 
-double	ft_fmin(double a, double b)
+inline double	ft_fmin(double a, double b)
 {
 	if (a < b)
 		return (a);

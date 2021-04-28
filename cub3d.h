@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 08:58:24 by efarin            #+#    #+#             */
+/*   Updated: 2021/04/28 08:58:26 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -10,6 +22,7 @@
 # include <stdarg.h>
 # include <stdio.h>
 # include <limits.h>
+# include <pthread.h>
 # include <fcntl.h>
 
 # define KEY_D 2
@@ -58,7 +71,7 @@ typedef struct s_sprite
 {
 	t_coord			coord;
 	t_plane			plane;
-	t_inter			inter;
+	// t_inter			inter;
 }					t_sprite;
 
 typedef struct s_textures
@@ -85,7 +98,25 @@ typedef struct s_eastnwest
 	int				text2;
 }					t_eastnwest;
 
-typedef struct s_state
+typedef struct s_state	t_state;
+
+typedef struct s_thread
+{
+	pthread_t		thread;
+	pthread_mutex_t	mutex;
+	pthread_cond_t	done_cond;
+	t_state			*state;
+	int				pxl_color;
+	t_vector		temp;
+	t_wall_text		wall_text;
+	t_coord			inter1_wall;
+	t_coord			inter2_wall;
+	int				i_plane;
+	t_plane			*plane;
+	t_inter			*inter_sprite;
+}					t_thread;
+
+struct s_state
 {
 	t_struct		parse;
 	void			*mlx;
@@ -101,11 +132,6 @@ typedef struct s_state
 	t_plane			*y_plane;
 	double			angle;
 	double			z_angle;
-	int				i_plane;
-	t_plane			*plane;
-	t_coord			inter1_wall;
-	t_coord			inter2_wall;
-	t_wall_text		wall_text;
 	int				W_key;
 	int				A_key;
 	int				D_key;
@@ -119,10 +145,12 @@ typedef struct s_state
 	t_textures		*text;
 	int				nb_sprites;
 	t_sprite		*sprite_tab;
-	int				pxl_color;
-	t_vector		temp;
 	t_coord			ply_temp;
-}					t_state;
+	int				f_color;
+	int				c_color;
+	t_thread		thread_data;
+	pthread_cond_t	render_cond;
+};
 
 void			my_mlx_pixel_put(t_state *state, int x, int y, int color);
 char			*get_pixel(t_textures *text, int x, int y);
@@ -134,17 +162,17 @@ t_vector		create_vector(double x, double y, double z);
 t_vector		rotate_vector_z(t_vector vector, double angle);
 t_vector		rotate_vector_x(t_vector vector, double angle);
 double			ft_distance(t_plane plane, t_vector dir);
-t_inter			ft_get_coord(t_vector dir, t_state *state, int i, int j);
+t_inter			ft_get_coord(t_vector dir, t_thread *data, int i, int j);
 double			is_there_wall(t_coord *inter_wall, t_inter inter,
 					t_state *state);
-double			check_north(t_state *state, int i, int j);
-double			check_south(t_state *state, int i, int j);
-double			check_east(t_state *state, int i, int j);
-double			check_west(t_state *state, int i, int j);
+double			check_north(t_thread *data, int i, int j);
+double			check_south(t_thread *data, int i, int j);
+double			check_east(t_thread *data, int i, int j);
+double			check_west(t_thread *data, int i, int j);
 double			ft_fmax(double a, double b);
 double			ft_fmin(double a, double b);
 t_coord			rectif_pos(t_state *state, t_plane plane, t_coord inter);
-void			ft_intersections(t_state *state, int scale);
+void			ft_intersections(t_thread *data, int scale);
 int				key_hook(int keycode, t_state *state);
 void			d_or_a_key(t_state *state);
 void			w_or_s_key(t_state *state);
@@ -152,10 +180,10 @@ int				release_key(int keycode, t_state *state);
 void			ft_mem_sprite_tab(t_state *state);
 void			ft_coord_sprites(t_state *state);
 void			ft_planes_sprites(t_state *state);
-int				ft_find_sprite(t_vector dir, t_state *state, int sprite_num);
+int				ft_find_sprite(t_vector dir, t_thread *data, int sprite_num);
 t_wall_text		ft_texture(double t1, double t2, int text1, int text2);
-t_wall_text		ft_find_texture(t_state *state, int i, int j);
-t_eastnwest		check_east_n_west(t_state *state, int j, int i,
+t_wall_text		ft_find_texture(t_thread *data, int i, int j);
+t_eastnwest		check_east_n_west(t_thread *data, int j, int i,
 					t_eastnwest res);
 int				mlx_get_texture_first(t_state *state);
 int				mlx_get_texture(t_state *state);
@@ -163,19 +191,22 @@ double			get_vector_norm(t_vector U);
 double			get_sprite_text(t_state *state, t_coord I, int k);
 void			ft_sort_sprites(t_state *state);
 void			ft_smaller_dist(t_state *state, int i, int j, double dist_min);
-int				ft_is_sprite_printed(t_state *state, int sprite_num, int i,
+int				ft_is_sprite_printed(t_thread *data, int sprite_num, int i,
 					int j);
-int				ft_print_sprite(t_state *state, int i, int j, int result);
-void			ft_print_the_right_pixel(t_state *state, int i, int j);
+int				ft_print_sprite(t_thread *data, int i, int j, int result);
+void			ft_print_the_right_pixel(t_thread *data, int i, int j);
 double			calc_dividend(t_plane p, double rs, t_coord pos);
 void			distance_dividend_wall(t_coord pos, t_plane *plane, int limit);
 void			distance_dividend_sprites(t_state *state);
-t_coord			scaling_pixel_color(int i, int j, t_state *state, int scale);
+t_coord			scaling_pixel_color(int i, int j, t_thread *data, int scale);
 int				ft_free_n_exit(t_state *state);
 t_vector		addition_v(t_vector v1, t_vector v2);
 void			ft_collision(t_state *state);
 void			jump_or_squat(t_state *state);
 void			up_or_down(t_state *state);
 char			*ft_free_rays(t_vector **tab, size_t i);
+void			thread_create(t_state *state);
+void			init_multi_thread(t_state *state);
+void			*thread_main(t_thread *thread_data);
 
 #endif

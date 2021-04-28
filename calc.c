@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   calc.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 08:57:38 by efarin            #+#    #+#             */
+/*   Updated: 2021/04/28 08:57:40 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-double	calc_dividend(t_plane plane, double rs, t_coord pos)
+inline double	calc_dividend(t_plane plane, double rs, t_coord pos)
 {
 	rs = ((plane.a * pos.x) + (plane.b * pos.y) + plane.d);
 	return (rs);
@@ -32,22 +44,4 @@ void	distance_dividend_sprites(t_state *state)
 		rs = calc_dividend(state->sprite_tab[i].plane, rs, pos);
 		state->sprite_tab[i].plane.rs = rs;
 	}
-}
-
-t_coord	scaling_pixel_color(int i, int j, t_state *state, int scale)
-{
-	t_coord	pxl;
-
-	pxl.y = j;
-	while (pxl.y < (j + scale) && pxl.y < state->parse.Ry)
-	{
-		pxl.x = i;
-		while (pxl.x < (i + scale) && pxl.x < state->parse.Rx)
-		{
-			my_mlx_pixel_put(state, pxl.x, pxl.y, state->pxl_color);
-			pxl.x++;
-		}
-		pxl.y++;
-	}
-	return (pxl);
 }

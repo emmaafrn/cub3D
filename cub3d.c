@@ -34,6 +34,10 @@ void	my_mlx_pixel_put(t_state *state, int x, int y, int color)
 
 void	ft_get_parse_infos(t_state *state)
 {
+	state->f_color = (state->parse.F_R << 16) + (state->parse.F_G << 8)
+		+ (state->parse.F_B);
+	state->c_color = (state->parse.C_R << 16) + (state->parse.C_G << 8)
+		+ (state->parse.C_B);
 	if (state->parse.position == 'W')
 		state->angle = 270 * RAD;
 	if (state->parse.position == 'E')
@@ -45,16 +49,22 @@ void	ft_get_parse_infos(t_state *state)
 int	main(int arc, char **arv)
 {
 	t_state		state;
+	t_struct	*map;
 
-	arc = 0;
-	state.parse = *ismapvalid(arv);
-	get_hmap(&state);
-	if (!state.parse.map)
+	map = NULL;
+	if (arc == 1)
+	{
+		printf("Erreur, pas d'argument(s)");	
+		exit(0);
+	}
+	map = ismapvalid(arv);
+	if (!map)
 	{
 		printf("Mauvaise map, réessayes !\n");
 		ft_free_n_exit(&state);
 	}
-	ft_ray_dir(&state);
+	state.parse = *map;
+	get_hmap(&state);
 	if (!ft_planes(&state) || !(ft_init_game(&state)))
 		ft_free_n_exit(&state);
 	if (!(mlx_get_texture(&state)))
@@ -62,6 +72,7 @@ int	main(int arc, char **arv)
 		printf("Erreur de récupération des textures !\n");
 		ft_free_n_exit(&state);
 	}
+	ft_ray_dir(&state);
 	ft_get_parse_infos(&state);
 	ft_mem_sprite_tab(&state);
 	ft_coord_sprites(&state);

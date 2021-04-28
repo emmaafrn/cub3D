@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_intersections.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 08:57:49 by efarin            #+#    #+#             */
+/*   Updated: 2021/04/28 08:57:51 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-double	is_there_wall(t_coord *inter_wall, t_inter inter, t_state *state)
+inline double	is_there_wall(t_coord *inter_wall, t_inter inter, t_state *state)
 {
 	if ((int)inter.coord.x >= 0 && (int)inter.coord.x < state->parse.lenmax
 		&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < state->parse.hmap)
@@ -15,21 +27,21 @@ double	is_there_wall(t_coord *inter_wall, t_inter inter, t_state *state)
 	return (inter.t);
 }
 
-double	check_north(t_state *state, int i, int j)
+double	check_north(t_thread *data, int i, int j)
 {
 	int		l;
 	t_inter	inter;
 
 	inter.t = -1;
-	state->plane = state->x_plane;
-	l = (int)state->player_pos.y;
+	data->plane = data->state->x_plane;
+	l = (int)data->state->player_pos.y;
 	while (l >= 0 && inter.t < 0)
 	{
-		state->i_plane = l;
-		inter = ft_get_coord(state->temp, state, i, j);
+		data->i_plane = l;
+		inter = ft_get_coord(data->temp, data, i, j);
 		if (inter.t >= 0)
 		{
-			inter.t = is_there_wall(&state->inter1_wall, inter, state);
+			inter.t = is_there_wall(&data->inter1_wall, inter, data->state);
 			if (inter.t != -1)
 				return (inter.t);
 		}
@@ -38,21 +50,21 @@ double	check_north(t_state *state, int i, int j)
 	return (inter.t);
 }
 
-double	check_south(t_state *state, int i, int j)
+double	check_south(t_thread *data, int i, int j)
 {
 	int		l;
 	t_inter	inter;
 
 	inter.t = -1;
-	state->plane = state->x_plane;
-	l = (int)state->player_pos.y;
-	while (l < state->parse.hmap && inter.t < 0)
+	data->plane = data->state->x_plane;
+	l = (int)data->state->player_pos.y;
+	while (l < data->state->parse.hmap && inter.t < 0)
 	{
-		state->i_plane = l;
-		inter = ft_get_coord(state->temp, state, i, j);
+		data->i_plane = l;
+		inter = ft_get_coord(data->temp, data, i, j);
 		if (inter.t >= 0)
 		{
-			inter.t = is_there_wall(&state->inter1_wall, inter, state);
+			inter.t = is_there_wall(&data->inter1_wall, inter, data->state);
 			if (inter.t != -1)
 				return (inter.t);
 		}
@@ -61,21 +73,21 @@ double	check_south(t_state *state, int i, int j)
 	return (inter.t);
 }
 
-double	check_east(t_state *state, int i, int j)
+double	check_east(t_thread *data, int i, int j)
 {
 	int		l;
 	t_inter	inter;
 
 	inter.t = -1;
-	state->plane = state->y_plane;
-	l = (int)state->player_pos.x;
-	while (l < state->parse.lenmax && inter.t < 0)
+	data->plane = data->state->y_plane;
+	l = (int)data->state->player_pos.x;
+	while (l < data->state->parse.lenmax && inter.t < 0)
 	{
-		state->i_plane = l;
-		inter = ft_get_coord(state->temp, state, i, j);
+		data->i_plane = l;
+		inter = ft_get_coord(data->temp, data, i, j);
 		if (inter.t >= 0)
 		{
-			inter.t = is_there_wall(&state->inter2_wall, inter, state);
+			inter.t = is_there_wall(&data->inter2_wall, inter, data->state);
 			if (inter.t != -1)
 				return (inter.t);
 		}
@@ -84,21 +96,21 @@ double	check_east(t_state *state, int i, int j)
 	return (inter.t);
 }
 
-double	check_west(t_state *state, int i, int j)
+double	check_west(t_thread *data, int i, int j)
 {
 	int		l;
 	t_inter	inter;
 
 	inter.t = -1;
-	state->plane = state->y_plane;
-	l = (int)state->player_pos.x;
+	data->plane = data->state->y_plane;
+	l = (int)data->state->player_pos.x;
 	while (l >= 0 && inter.t < 0)
 	{
-		state->i_plane = l;
-		inter = ft_get_coord(state->temp, state, i, j);
+		data->i_plane = l;
+		inter = ft_get_coord(data->temp, data, i, j);
 		if (inter.t >= 0)
 		{
-			inter.t = is_there_wall(&state->inter2_wall, inter, state);
+			inter.t = is_there_wall(&data->inter2_wall, inter, data->state);
 			if (inter.t != -1)
 				return (inter.t);
 		}

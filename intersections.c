@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   intersections.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/28 08:59:23 by efarin            #+#    #+#             */
+/*   Updated: 2021/04/28 08:59:25 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int	ft_planes(t_state *state)
@@ -53,29 +65,28 @@ void	ft_ray_dir(t_state *state)
 	}
 }
 
-void	ft_intersections(t_state *state, int scale)
+void	ft_intersections(t_thread *data, int scale)
 {
 	int		i;
 	int		j;
 
 	j = 0;
-	while (j < state->parse.Ry)
+	while (j < data->state->parse.Ry)
 	{
 		i = 0;
-		while (i < state->parse.Rx)
+		while (i < data->state->parse.Rx)
 		{
-			state->temp = state->dir_ray[j][i];
-			state->temp = rotate_vector_x(state->temp, \
-			state->z_angle);
-			state->temp = rotate_vector_z(state->temp, \
-			state->angle);
-			ft_print_the_right_pixel(state, i, j);
-			scaling_pixel_color(i, j, state, scale);
+			data->temp = data->state->dir_ray[j][i];
+			data->temp = rotate_vector_x(data->temp,
+				data->state->z_angle);
+			data->temp = rotate_vector_z(data->temp,
+				data->state->angle);
+			ft_print_the_right_pixel(data, i, j);
+			scaling_pixel_color(i, j, data, scale);
 			i += scale;
 		}
 		j += scale;
 	}
-	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);
 }
 
 double	ft_distance(t_plane plane, t_vector dir)
@@ -92,26 +103,26 @@ double	ft_distance(t_plane plane, t_vector dir)
 	return (t);
 }
 
-t_inter	ft_get_coord(t_vector dir, t_state *state, int i, int j)
+t_inter	ft_get_coord(t_vector dir, t_thread *data, int i, int j)
 {
 	double	t;
 	t_inter	inter;
 
-	t = ft_distance(state->plane[state->i_plane], dir);
+	t = ft_distance(data->plane[data->i_plane], dir);
 	inter.t = t;
 	if (t == -1)
 		return (inter);
-	inter.coord.x = state->player_pos.x + (t * dir.x);
-	inter.coord.y = state->player_pos.y + (t * dir.y);
-	inter.coord.z = state->player_pos.z + (t * dir.z);
-	inter.coord = rectif_pos(state, state->plane[state->i_plane], inter.coord);
+	inter.coord.x = data->state->player_pos.x + (t * dir.x);
+	inter.coord.y = data->state->player_pos.y + (t * dir.y);
+	inter.coord.z = data->state->player_pos.z + (t * dir.z);
+	inter.coord = rectif_pos(data->state, data->plane[data->i_plane], inter.coord);
 	if (inter.coord.z < 0 || inter.coord.z > 1)
 	{
 		if (inter.coord.z < 0)
-			state->pxl_color = 0x00FF00;
+			data->pxl_color = data->state->f_color;
 		else
-			state->pxl_color = 0x0000FF;
-		my_mlx_pixel_put(state, i, j, state->pxl_color);
+			data->pxl_color = data->state->c_color;
+		my_mlx_pixel_put(data->state, i, j, data->pxl_color);
 	}
 	else if (inter.coord.z >= 0 && inter.coord.z <= 1)
 		return (inter);
