@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-inline double	calc_dividend(t_plane plane, double rs, t_coord pos)
+double	calc_dividend(t_plane plane, double rs, t_coord pos)
 {
 	rs = ((plane.a * pos.x) + (plane.b * pos.y) + plane.d);
 	return (rs);

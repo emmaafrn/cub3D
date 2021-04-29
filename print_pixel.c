@@ -12,15 +12,15 @@
 
 #include "cub3d.h"
 
-inline int	ft_is_sprite_printed(t_thread *data, int sprite_num, int i, int j)
+int	ft_is_sprite_printed(t_thread *data, int sprite_num, int i, int j)
 {
 	double	ratioSx;
 	int		color;
 	int		imgx;
 	int		imgy;
 
-	ratioSx = 1 - get_sprite_text(data->state, data->inter_sprite[sprite_num].coord, \
-		sprite_num);
+	ratioSx = 1 - get_sprite_text(data->state,
+			data->inter_sprite[sprite_num].coord, sprite_num);
 	imgx = (data->state->text[4].width - 1) * ratioSx;
 	imgy = (data->state->text[4].height - 1)
 		* data->inter_sprite[sprite_num].coord.z;
@@ -37,19 +37,19 @@ inline int	ft_is_sprite_printed(t_thread *data, int sprite_num, int i, int j)
 	return (0);
 }
 
-inline int	ft_print_sprite(t_thread *data, int i, int j, int result)
+int	ft_print_sprite(t_thread *data, int i, int j, int result)
 {
 	int		sprite_num;
 	int		printed;
 
 	sprite_num = -1;
 	printed = 0;
-	while (sprite_num != -2 && sprite_num < data->state->nb_sprites && printed == 0)
+	while (sprite_num != -2 && sprite_num < data->state->nb_sprites
+		&& printed == 0)
 	{
-		sprite_num = \
-		ft_find_sprite(data->temp, data, sprite_num + 1);
-		if (sprite_num != -2 && (result == 5 \
-		|| data->inter_sprite[sprite_num].t < data->wall_text.t))
+		sprite_num = ft_find_sprite(data->temp, data, sprite_num + 1);
+		if (sprite_num != -2 && (result == 5
+				|| data->inter_sprite[sprite_num].t < data->wall_text.t))
 			printed = ft_is_sprite_printed(data, sprite_num, i, j);
 	}
 	return (printed);
@@ -91,8 +91,8 @@ void	ft_print_the_right_pixel(t_thread *data, int i, int j)
 				decimal = 1 - decimal;
 			imgx = (data->state->text[result].width - 1) * decimal;
 			imgy = (data->state->text[result].height - 1) * data->inter2_wall.z;
-			data->pxl_color = *(unsigned int *)get_pixel(&data->state->text[result],
-					imgx, imgy);
+			data->pxl_color = *(unsigned int *) \
+			get_pixel(&data->state->text[result], imgx, imgy);
 			my_mlx_pixel_put(data->state, i, j, data->pxl_color);
 		}
 		else if (result == 0 || result == 3)

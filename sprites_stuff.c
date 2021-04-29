@@ -87,7 +87,6 @@ void	ft_planes_sprites(t_state *state)
 
 int	ft_keep_inter(t_thread *data, t_inter inter, int k, double t)
 {
-	// printf("data->inter_sprite[k] = %p\n", &data->inter_sprite[k]);
 	data->inter_sprite[k].coord.x = inter.coord.x;
 	data->inter_sprite[k].coord.y = inter.coord.y;
 	data->inter_sprite[k].coord.z = inter.coord.z;
@@ -114,7 +113,8 @@ int	ft_find_sprite(t_vector dir, t_thread *data, int sprite_num)
 		{
 			if ((int)inter.coord.x >= 0 && (int)inter.coord.x < data->state->parse.lenmax \
 			&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < data->state->parse.hmap) \
-			&& data->state->parse.map[(int)inter.coord.y][(int)inter.coord.x] == '2')
+			&& data->state->parse.map[(int)inter.coord.y][(int)inter.coord.x]
+				== '2')
 				return (ft_keep_inter(data, inter, k, t));
 		}
 		k++;

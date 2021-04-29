@@ -14,6 +14,7 @@
 
 void	key_init(t_state *state)
 {
+	state->scale = 2;
 	state->W_key = 0;
 	state->D_key = 0;
 	state->S_key = 0;

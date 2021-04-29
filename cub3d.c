@@ -36,7 +36,7 @@ void	ft_get_parse_infos(t_state *state)
 {
 	int	sizex;
 	int	sizey;
-	
+
 	mlx_get_screen_size(state, &sizex, &sizey);
 	if (state->parse.Rx > sizex)
 		state->parse.Rx = sizex;
@@ -61,6 +61,11 @@ void	get_parse(t_struct *map, t_state *state, int arc, char **arv)
 		printf("Error, no arguments");
 		exit(0);
 	}
+	if (arc > 3)
+	{
+		printf("Error, arguments not valids !\n");
+		exit(0);
+	}
 	map = ismapvalid(arv);
 	if (!map)
 	{
@@ -79,15 +84,13 @@ int	main(int arc, char **arv)
 	map = NULL;
 	get_parse(map, &state, arc, arv);
 	ft_get_parse_infos(&state);
-	if (!ft_planes(&state) || !(ft_init_game(&state)) || !(mlx_get_texture(&state)))
+	if (!ft_planes(&state) || !ft_init_game(&state) || !mlx_get_texture(&state))
 		ft_free_n_exit(&state);
 	ft_ray_dir(&state);
 	ft_mem_sprite_tab(&state);
 	ft_coord_sprites(&state);
-	state.thread_data[0].inter_sprite = malloc(state.nb_sprites * sizeof(t_inter));
-	state.thread_data[1].inter_sprite = malloc(state.nb_sprites * sizeof(t_inter));
-	state.thread_data[2].inter_sprite = malloc(state.nb_sprites * sizeof(t_inter));
-	state.thread_data[3].inter_sprite = malloc(state.nb_sprites * sizeof(t_inter));
+	if (!malloc_thread_data_stuff(&state))
+		ft_free_n_exit(&state);
 	mlx_hook(state.win, 2, 0, key_hook, &state);
 	mlx_hook(state.win, 3, 0, release_key, &state);
 	mlx_hook(state.win, 17, 0, ft_free_n_exit, &state);

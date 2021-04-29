@@ -21,7 +21,7 @@ char	*get_pixel(t_textures *text, int x, int y)
 	return (dst);
 }
 
-inline t_wall_text	ft_texture(double t1, double t2, int text1, int text2)
+t_wall_text	ft_texture(double t1, double t2, int text1, int text2)
 {
 	t_wall_text	wall_text;
 
@@ -45,7 +45,7 @@ inline t_wall_text	ft_texture(double t1, double t2, int text1, int text2)
 	return (wall_text);
 }
 
-inline t_eastnwest	check_east_n_west(t_thread *data, int j, int i, t_eastnwest res)
+t_eastnwest	check_east_n_west(t_thread *data, int j, int i, t_eastnwest res)
 {
 	if (data->temp.x >= 0)
 	{

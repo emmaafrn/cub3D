@@ -36,6 +36,8 @@
 # define KEY_ESC 53
 # define KEY_SPACE 49
 # define KEY_C 8
+# define KEY_LESS 53
+# define KEY_MORE 78
 # define RAD 0.01745329251
 
 typedef struct s_vector
@@ -144,6 +146,8 @@ struct s_state
 	int				down_key;
 	int				space_key;
 	int				c_key;
+	int				less_key;
+	int				more_key;
 	t_textures		*text;
 	int				nb_sprites;
 	t_sprite		*sprite_tab;
@@ -151,6 +155,7 @@ struct s_state
 	int				f_color;
 	int				c_color;
 	t_thread		thread_data[4];
+	int				scale;
 };
 
 void			save_bmp(const char *filename, t_state *state);
@@ -209,5 +214,6 @@ void			up_or_down(t_state *state);
 char			*ft_free_rays(t_vector **tab, size_t i);
 void			thread_create(t_state *state, int thread_id);
 void			*thread_main(t_thread *thread_data);
+int				malloc_thread_data_stuff(t_state *state);
 
 #endif

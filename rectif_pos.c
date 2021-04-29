@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-inline double	ft_fmax(double a, double b)
+double	ft_fmax(double a, double b)
 {
 	if (a < b)
 		return (b);
@@ -20,7 +20,7 @@ inline double	ft_fmax(double a, double b)
 		return (a);
 }
 
-inline double	ft_fmin(double a, double b)
+double	ft_fmin(double a, double b)
 {
 	if (a < b)
 		return (a);

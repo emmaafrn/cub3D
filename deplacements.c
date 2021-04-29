@@ -12,6 +12,20 @@
 
 #include "cub3d.h"
 
+void	d_or_a_key(t_state *state)
+{
+	if (state->D_key == 1)
+	{
+		state->player_pos.x += 0.5 * cos(state->angle);
+		state->player_pos.y += 0.5 * sin(state->angle);
+	}
+	if (state->A_key == 1)
+	{
+		state->player_pos.x += -0.5 * cos(state->angle);
+		state->player_pos.y += -0.5 * sin(state->angle);
+	}
+}
+
 void	w_or_s_key(t_state *state)
 {
 	if (state->W_key == 1)

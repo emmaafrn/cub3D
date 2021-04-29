@@ -50,9 +50,16 @@ void	ft_ray_dir(t_state *state)
 	r_h = (2 * tan((60 * RAD) / 2)) / state->parse.Rx;
 	r_v = (r_h * state->parse.Ry) / state->parse.Rx;
 	state->dir_ray = malloc(state->parse.Ry * sizeof(t_vector *));
+	if (state->dir_ray == NULL)
+		ft_free_n_exit(state);
 	while (j < state->parse.Ry)
 	{
 		state->dir_ray[j] = malloc(state->parse.Rx * sizeof(t_vector));
+		if (state->dir_ray[j] == NULL)
+		{
+			ft_free_rays(state->dir_ray, j);
+			ft_free_n_exit(state);
+		}
 		i = 0;
 		while (i < state->parse.Rx)
 		{
@@ -80,9 +87,9 @@ void	ft_intersections(t_thread *data, int scale)
 		{
 			data->temp = data->state->dir_ray[j][i];
 			data->temp = rotate_vector_x(data->temp,
-				data->state->z_angle);
+					data->state->z_angle);
 			data->temp = rotate_vector_z(data->temp,
-				data->state->angle);
+					data->state->angle);
 			ft_print_the_right_pixel(data, i, j);
 			scaling_pixel_color(i, j, data, scale);
 			i += scale;
@@ -117,7 +124,8 @@ t_inter	ft_get_coord(t_vector dir, t_thread *data, int i, int j)
 	inter.coord.x = data->state->player_pos.x + (t * dir.x);
 	inter.coord.y = data->state->player_pos.y + (t * dir.y);
 	inter.coord.z = data->state->player_pos.z + (t * dir.z);
-	inter.coord = rectif_pos(data->state, data->plane[data->i_plane], inter.coord);
+	inter.coord = rectif_pos(data->state, data->plane[data->i_plane],
+			inter.coord);
 	if (inter.coord.z < 0 || inter.coord.z > 1)
 	{
 		if (inter.coord.z < 0)

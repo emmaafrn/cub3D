@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-inline double	is_there_wall(t_coord *inter_wall, t_inter inter, t_state *state)
+double	is_there_wall(t_coord *inter_wall, t_inter inter, t_state *state)
 {
 	if ((int)inter.coord.x >= 0 && (int)inter.coord.x < state->parse.lenmax
 		&& ((int)inter.coord.y >= 0 && (int)inter.coord.y < state->parse.hmap)
