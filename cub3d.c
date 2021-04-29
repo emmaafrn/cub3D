@@ -34,6 +34,14 @@ void	my_mlx_pixel_put(t_state *state, int x, int y, int color)
 
 void	ft_get_parse_infos(t_state *state)
 {
+	int	sizex;
+	int	sizey;
+	
+	mlx_get_screen_size(state, &sizex, &sizey);
+	if (state->parse.Rx > sizex)
+		state->parse.Rx = sizex;
+	if (state->parse.Ry > sizey)
+		state->parse.Ry = sizey;
 	state->f_color = (state->parse.F_R << 16) + (state->parse.F_G << 8)
 		+ (state->parse.F_B);
 	state->c_color = (state->parse.C_R << 16) + (state->parse.C_G << 8)
@@ -46,36 +54,40 @@ void	ft_get_parse_infos(t_state *state)
 		state->angle = 180 * RAD;
 }
 
+void	get_parse(t_struct *map, t_state *state, int arc, char **arv)
+{
+	if (arc == 1)
+	{
+		printf("Error, no arguments");
+		exit(0);
+	}
+	map = ismapvalid(arv);
+	if (!map)
+	{
+		printf("Map not valid, retry !\n");
+		ft_free_n_exit(state);
+	}
+	state->parse = *map;
+	get_hmap(state);
+}
+
 int	main(int arc, char **arv)
 {
 	t_state		state;
 	t_struct	*map;
 
 	map = NULL;
-	if (arc == 1)
-	{
-		printf("Erreur, pas d'argument(s)");	
-		exit(0);
-	}
-	map = ismapvalid(arv);
-	if (!map)
-	{
-		printf("Mauvaise map, réessayes !\n");
-		ft_free_n_exit(&state);
-	}
-	state.parse = *map;
-	get_hmap(&state);
-	if (!ft_planes(&state) || !(ft_init_game(&state)))
-		ft_free_n_exit(&state);
-	if (!(mlx_get_texture(&state)))
-	{
-		printf("Erreur de récupération des textures !\n");
-		ft_free_n_exit(&state);
-	}
-	ft_ray_dir(&state);
+	get_parse(map, &state, arc, arv);
 	ft_get_parse_infos(&state);
+	if (!ft_planes(&state) || !(ft_init_game(&state)) || !(mlx_get_texture(&state)))
+		ft_free_n_exit(&state);
+	ft_ray_dir(&state);
 	ft_mem_sprite_tab(&state);
 	ft_coord_sprites(&state);
+	state.thread_data[0].inter_sprite = malloc(state.nb_sprites * sizeof(t_inter));
+	state.thread_data[1].inter_sprite = malloc(state.nb_sprites * sizeof(t_inter));
+	state.thread_data[2].inter_sprite = malloc(state.nb_sprites * sizeof(t_inter));
+	state.thread_data[3].inter_sprite = malloc(state.nb_sprites * sizeof(t_inter));
 	mlx_hook(state.win, 2, 0, key_hook, &state);
 	mlx_hook(state.win, 3, 0, release_key, &state);
 	mlx_hook(state.win, 17, 0, ft_free_n_exit, &state);

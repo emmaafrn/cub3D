@@ -71,7 +71,6 @@ typedef struct s_sprite
 {
 	t_coord			coord;
 	t_plane			plane;
-	// t_inter			inter;
 }					t_sprite;
 
 typedef struct s_textures
@@ -103,8 +102,6 @@ typedef struct s_state	t_state;
 typedef struct s_thread
 {
 	pthread_t		thread;
-	pthread_mutex_t	mutex;
-	pthread_cond_t	done_cond;
 	t_state			*state;
 	int				pxl_color;
 	t_vector		temp;
@@ -114,6 +111,7 @@ typedef struct s_thread
 	int				i_plane;
 	t_plane			*plane;
 	t_inter			*inter_sprite;
+	int				thread_id;
 }					t_thread;
 
 struct s_state
@@ -123,6 +121,10 @@ struct s_state
 	void			*win;
 	void			*img;
 	char			*addr;
+	void			*img1;
+	char			*addr1;
+	void			*img2;
+	char			*addr2;
 	int				bits_per_pixel;
 	int				line_length;
 	int				endian;
@@ -148,10 +150,10 @@ struct s_state
 	t_coord			ply_temp;
 	int				f_color;
 	int				c_color;
-	t_thread		thread_data;
-	pthread_cond_t	render_cond;
+	t_thread		thread_data[4];
 };
 
+void			save_bmp(const char *filename, t_state *state);
 void			my_mlx_pixel_put(t_state *state, int x, int y, int color);
 char			*get_pixel(t_textures *text, int x, int y);
 int				ft_planes(t_state *state);
@@ -205,8 +207,7 @@ void			ft_collision(t_state *state);
 void			jump_or_squat(t_state *state);
 void			up_or_down(t_state *state);
 char			*ft_free_rays(t_vector **tab, size_t i);
-void			thread_create(t_state *state);
-void			init_multi_thread(t_state *state);
+void			thread_create(t_state *state, int thread_id);
 void			*thread_main(t_thread *thread_data);
 
 #endif

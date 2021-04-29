@@ -38,11 +38,12 @@ int	ft_init_game(t_state *state)
 		return (0);
 	state->win = mlx_new_window(state->mlx, state->parse.Rx,
 			state->parse.Ry, "cub3d");
-	state->img = mlx_new_image(state->mlx, state->parse.Rx, state->parse.Ry);
-	state->addr = mlx_get_data_addr(state->img, &state->bits_per_pixel,
+	state->img1 = mlx_new_image(state->mlx, state->parse.Rx, state->parse.Ry);
+	state->img2 = mlx_new_image(state->mlx, state->parse.Rx, state->parse.Ry);
+	state->addr1 = mlx_get_data_addr(state->img1, &state->bits_per_pixel,
+			&state->line_length, &state->endian);
+	state->addr2 = mlx_get_data_addr(state->img2, &state->bits_per_pixel,
 			&state->line_length, &state->endian);
 	state->text = malloc (5 * sizeof(t_textures));
-	init_multi_thread(state);
-	thread_create(state);
 	return (state->win != NULL || state->text != NULL);
 }

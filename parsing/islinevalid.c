@@ -65,6 +65,8 @@ int	firstpartmap(char *line, t_struct *mstruct, int y)
 		checkelemR(line, mstruct);
 	if (y == 0 && mstruct->Rx > 0 && mstruct->Ry > 0)
 		return (1);
+	else if (y == 0 && !(mstruct->Rx > 0 && mstruct->Ry > 0))
+		printf("Error, bad resolution !\n");
 	if (y == 1 && mstruct->pathtoNO == NULL)
 	{
 		mstruct->pathtoNO = checktheid(line, 'N', 'O');
@@ -87,6 +89,10 @@ int	secondpartmap(char *line, t_struct *mstruct, int y)
 		&& (mstruct->F_G >= 0 && mstruct->F_G <= 255)
 		&& (mstruct->F_B >= 0 && mstruct->F_B <= 255))
 		return (1);
+	else if (y == 6 && !((mstruct->F_R >= 0 && mstruct->F_R <= 255)
+			&& (mstruct->F_G >= 0 && mstruct->F_G <= 255)
+			&& (mstruct->F_B >= 0 && mstruct->F_B <= 255)))
+		printf("Error, bad floor color !\n");
 	if (y == 7 && (mstruct->C_B == -1 && mstruct->C_R == -1
 			&& mstruct->C_G == -1))
 		checkelemC(line, mstruct);
@@ -94,6 +100,10 @@ int	secondpartmap(char *line, t_struct *mstruct, int y)
 		&& (mstruct->C_G >= 0 && mstruct->C_G <= 255)
 		&& (mstruct->C_B >= 0 && mstruct->C_B <= 255))
 		return (1);
+	else if (y == 7 && !((mstruct->C_R <= 255)
+			&& (mstruct->C_G >= 0 && mstruct->C_G <= 255)
+			&& (mstruct->C_B >= 0 && mstruct->C_B <= 255)))
+		printf("Error, bad ceil color !\n");
 	return (-1);
 }
 

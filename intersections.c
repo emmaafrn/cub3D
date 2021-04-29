@@ -69,9 +69,11 @@ void	ft_intersections(t_thread *data, int scale)
 {
 	int		i;
 	int		j;
+	int		lim_j;
 
-	j = 0;
-	while (j < data->state->parse.Ry)
+	j = (data->state->parse.Ry / 4) * data->thread_id;
+	lim_j = (data->state->parse.Ry / 4) * (data->thread_id + 1);
+	while (j < lim_j)
 	{
 		i = 0;
 		while (i < data->state->parse.Rx)

@@ -87,6 +87,7 @@ void	ft_planes_sprites(t_state *state)
 
 int	ft_keep_inter(t_thread *data, t_inter inter, int k, double t)
 {
+	// printf("data->inter_sprite[k] = %p\n", &data->inter_sprite[k]);
 	data->inter_sprite[k].coord.x = inter.coord.x;
 	data->inter_sprite[k].coord.y = inter.coord.y;
 	data->inter_sprite[k].coord.z = inter.coord.z;

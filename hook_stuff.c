@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include <stdio.h>
+#include <stdint.h>
 
 int	key_hook(int keycode, t_state *state)
 {
@@ -80,8 +82,18 @@ inline void	d_or_a_key(t_state *state)
 	}
 }
 
-int	ft_loop(t_state *state)
+void	first_loop(t_state *state)
 {
+	if (state->img == state->img1)
+	{
+		state->img = state->img2;
+		state->addr = state->addr2;
+	}
+	else
+	{
+		state->img = state->img1;
+		state->addr = state->addr1;
+	}
 	state->ply_temp = state->player_pos;
 	if (state->D_key == 1 || state->A_key == 1)
 		d_or_a_key(state);
@@ -95,6 +107,11 @@ int	ft_loop(t_state *state)
 		state->angle += (5 * RAD);
 	if (state->left_key == 1)
 		state->angle -= (5 * RAD);
+}
+
+int	ft_loop(t_state *state)
+{
+	first_loop(state);
 	if (state->angle == (360 * RAD))
 		state->angle = 0;
 	if (state->angle / RAD < 0)
@@ -105,9 +122,19 @@ int	ft_loop(t_state *state)
 		state->parse.hmap);
 	ft_planes_sprites(state);
 	distance_dividend_sprites(state);
-	pthread_mutex_lock(&state->thread_data.mutex);
-	pthread_cond_broadcast(&state->render_cond);
-	pthread_cond_wait(&state->thread_data.done_cond,&state->thread_data.mutex);
+	thread_create(state, 0);
+	thread_create(state, 1);
+	thread_create(state, 2);
+	thread_create(state, 3);
+	pthread_join(state->thread_data[0].thread, NULL);
+	pthread_join(state->thread_data[1].thread, NULL);
+	pthread_join(state->thread_data[2].thread, NULL);
+	pthread_join(state->thread_data[3].thread, NULL);
+	mlx_sync(MLX_SYNC_WIN_CMD_COMPLETED, state->win);
+	mlx_sync(MLX_SYNC_IMAGE_WRITABLE, state->img);
+	mlx_do_sync(state->mlx);
+	// save_bmp("save.bmp", state);
 	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);
+	mlx_sync(MLX_SYNC_WIN_FLUSH_CMD, state->win);
 	return (0);
 }
