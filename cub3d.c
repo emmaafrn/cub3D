@@ -56,16 +56,7 @@ void	ft_get_parse_infos(t_state *state)
 
 void	get_parse(t_struct *map, t_state *state, int arc, char **arv)
 {
-	if (arc == 1)
-	{
-		printf("Error, no arguments");
-		exit(0);
-	}
-	if (arc > 3)
-	{
-		printf("Error, arguments not valids !\n");
-		exit(0);
-	}
+	check_arguments(state, arc, arv);
 	map = ismapvalid(arv);
 	if (!map)
 	{

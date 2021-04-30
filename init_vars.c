@@ -31,6 +31,7 @@ void	key_init(t_state *state)
 int	ft_init_game(t_state *state)
 {
 	key_init(state);
+	state->r_h = (2 * tan((60 * RAD) / 2)) / state->parse.Rx;
 	state->player_pos.x = (double)state->parse.xplayer + 0.5;
 	state->player_pos.y = (double)state->parse.yplayer + 0.5;
 	state->player_pos.z = 0.5;

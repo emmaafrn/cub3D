@@ -78,6 +78,7 @@ int	checkthefilename(char **arv)
 			if (arv[1][i - 2] == 'c')
 				if (arv[1][i - 3] == '.')
 					return (1);
+	printf("Error, bad file extension !\n");
 	return (-1);
 }
 

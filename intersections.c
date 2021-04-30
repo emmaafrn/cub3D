@@ -41,18 +41,16 @@ int	ft_planes(t_state *state)
 
 void	ft_ray_dir(t_state *state)
 {
-	double	r_h;
 	double	r_v;
 	int		i;
 	int		j;
 
-	j = 0;
-	r_h = (2 * tan((60 * RAD) / 2)) / state->parse.Rx;
-	r_v = (r_h * state->parse.Ry) / state->parse.Rx;
+	j = -1;
+	r_v = (state->r_h * state->parse.Ry) / state->parse.Rx;
 	state->dir_ray = malloc(state->parse.Ry * sizeof(t_vector *));
 	if (state->dir_ray == NULL)
 		ft_free_n_exit(state);
-	while (j < state->parse.Ry)
+	while (++j < state->parse.Ry)
 	{
 		state->dir_ray[j] = malloc(state->parse.Rx * sizeof(t_vector));
 		if (state->dir_ray[j] == NULL)
@@ -60,15 +58,13 @@ void	ft_ray_dir(t_state *state)
 			ft_free_rays(state->dir_ray, j);
 			ft_free_n_exit(state);
 		}
-		i = 0;
-		while (i < state->parse.Rx)
+		i = -1;
+		while (++i < state->parse.Rx)
 		{
-			state->dir_ray[j][i].x = (i - (state->parse.Rx * 0.5)) * r_h;
+			state->dir_ray[j][i].x = (i - (state->parse.Rx * 0.5)) * state->r_h;
 			state->dir_ray[j][i].y = -1;
 			state->dir_ray[j][i].z = -(j - (state->parse.Ry * 0.5)) * r_v;
-			i++;
 		}
-		j++;
 	}
 }
 

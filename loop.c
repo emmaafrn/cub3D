@@ -65,10 +65,13 @@ int	ft_loop(t_state *state)
 {
 	first_loop(state);
 	scnd_loop(state);
+	if (state->more_key == 1 || state->less_key == 1)
+		change_scale(state);
 	mlx_sync(MLX_SYNC_WIN_CMD_COMPLETED, state->win);
 	mlx_sync(MLX_SYNC_IMAGE_WRITABLE, state->img);
 	mlx_do_sync(state->mlx);
-	// save_bmp("save.bmp", state);
+	if (state->save == 1)
+		save_bmp("save.bmp", state);
 	mlx_put_image_to_window(state->mlx, state->win, state->img, 0, 0);
 	mlx_sync(MLX_SYNC_WIN_FLUSH_CMD, state->win);
 	return (0);

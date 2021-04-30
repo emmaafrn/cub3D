@@ -54,6 +54,6 @@ void	thread_create(t_state *state, int thread_id)
 
 void	*thread_main(t_thread *thread_data)
 {
-	ft_intersections(thread_data, 2);
+	ft_intersections(thread_data, thread_data->state->scale);
 	return ((void *)0);
 }
